@@ -22,6 +22,10 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
 		}),
+		new HtmlWebpackPlugin({
+			template: './src/simple_charge/index.html',
+			filename: 'simple_charge/index.html',
+		}),
 	],
 
 	devServer: {
