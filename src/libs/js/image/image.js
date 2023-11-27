@@ -9,10 +9,16 @@ export class ImagePixels {
 	blueMatrix
 	alphaMatrix
 
-	constructor(height, width, imageData) {
-		this.height = height
-		this.width = width
-		this.imageData = imageData
+	constructor(imageData) {
+		if (imageData instanceof ImageData) {
+			this.height = imageData.height
+			this.width = imageData.width
+			this.imageData = imageData.data
+
+			this.fillMatrixes()
+		} else {
+			throw new Error('Данные должны быть ImageData!')
+		}
 	}
 
 	fillMatrixes() {
