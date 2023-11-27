@@ -13,7 +13,7 @@ export class ImagePixels {
 		if (imageData instanceof ImageData) {
 			this.height = imageData.height
 			this.width = imageData.width
-			this.imageData = imageData.data
+			this.imageData = imageData
 
 			this.fillMatrixes()
 		} else {
