@@ -1,4 +1,11 @@
 import {ImagePixels} from "./libs/js/image/image";
+import {Map} from "./libs/js/map/map";
+
+if (window.location.pathname === "/simple_charge/index.html") {
+	document.addEventListener('DOMContentLoaded', () => {
+		createTestImage('#charge')
+	})
+}
 
 function createTestImage(canvasSelector) {
 	let canvas = document.querySelector(canvasSelector)
