@@ -36,4 +36,15 @@ export class ImagePixels {
 			}
 		}
 	}
+
+	fillImageData() {
+		for (let y = 0; y < this.height; y += 1) {
+			for (let x = 0; x < this.width; x += 1) {
+				this.imageData.data[y * this.width * 4 + x * 4] = this.redMatrix.get(x, y)
+				this.imageData.data[y * this.width * 4 + x * 4 + 1] = this.greenMatrix.get(x, y)
+				this.imageData.data[y * this.width * 4 + x * 4 + 2] = this.blueMatrix.get(x, y)
+				this.imageData.data[y * this.width * 4 + x * 4 + 3] = this.alphaMatrix.get(x, y)
+			}
+		}
+	}
 }
