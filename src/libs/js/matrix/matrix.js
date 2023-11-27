@@ -1,10 +1,10 @@
 export class Matrix {
 	height = 0
 	width = 0
-	data = []
+	data
 
-	constructor(height, width, data) {
-		this.data = data;
+	constructor(height, width, dataStorageType) {
+		this.data = new (dataStorageType)(height * width);
 		this.height = height
 		this.width = width
 	}
