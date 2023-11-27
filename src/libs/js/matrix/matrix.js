@@ -10,11 +10,11 @@ export class Matrix {
 	}
 
 	get (x, y) {
-		return this.data[x * this.width + y]
+		return this.data[y * this.width + x]
 	}
 
 	set (x, y, value) {
-		this.data[x * this.width + y] = value
+		this.data[y * this.width + x] = value
 		return this
 	}
 }
