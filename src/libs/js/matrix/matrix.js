@@ -1,4 +1,4 @@
-class Matrix {
+export class Matrix {
 	height = 0
 	width = 0
 	data = []
