@@ -4,7 +4,11 @@ import {SimpleAgent} from "./simple_charge/agents";
 
 if (window.location.pathname === "/simple_charge/index.html") {
 	document.addEventListener('DOMContentLoaded', () => {
-		createTestImage('#charge')
+		document.addEventListener('click', (event) => {
+			if (event.target.name === 'go') {
+				createTestImage('#charge')
+			}
+		})
 	})
 }
 
