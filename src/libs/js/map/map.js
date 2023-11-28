@@ -22,4 +22,14 @@ export class Map {
 		}
 		this.storage = nextState
 	}
+
+	addAgent(agent) {
+		Map.addAgentToStorage(agent, this.storage)
+	}
+
+	static addAgentToStorage(agent, storage) {
+		let agentList = storage.get(agent.x, agent.y)
+		agentList.push(agent)
+		storage.set(agent.x, agent.y, agentList)
+	}
 }
