@@ -6,10 +6,15 @@ if (window.location.pathname === "/simple_charge/index.html") {
 	document.addEventListener('DOMContentLoaded', () => {
 		document.addEventListener('click', (event) => {
 			if (event.target.name === 'go') {
-				createTestImage('#charge')
+				run()
 			}
 		})
 	})
+}
+
+function run() {
+	let map = seedTestMap()
+	createTestImage('#charge')
 }
 
 function createTestImage(canvasSelector) {
