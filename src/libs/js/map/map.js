@@ -29,6 +29,9 @@ export class Map {
 
 	static addAgentToStorage(agent, storage) {
 		let agentList = storage.get(agent.x, agent.y)
+		if (!Array.isArray(agentList)) {
+			agentList = []
+		}
 		agentList.push(agent)
 		storage.set(agent.x, agent.y, agentList)
 	}
