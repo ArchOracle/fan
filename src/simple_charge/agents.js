@@ -4,7 +4,7 @@ import {Agent} from "../libs/js/map/agent";
 
 export class SimpleAgent extends Agent{
 	constructor(x, y, agentData) {
-		super(x, x, agentData);
+		super(x, y, agentData);
 	}
 	evaluate(thisState, nextState) {
 		super.evaluate(thisState, nextState)
