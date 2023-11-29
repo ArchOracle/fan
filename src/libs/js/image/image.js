@@ -9,6 +9,10 @@ export class ImagePixels {
 	blueMatrix
 	alphaMatrix
 
+	static create(height, width) {
+		return new ImagePixels(new ImageData(height, width))
+	}
+
 	constructor(imageData) {
 		if (imageData instanceof ImageData) {
 			this.height = imageData.height
