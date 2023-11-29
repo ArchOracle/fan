@@ -41,13 +41,17 @@ function createTestImage(canvasSelector) {
 }
 
 function seedTestMap() {
-	let map = new Map(600, 600)
-	for (let x = 0; x < map.width; x += 1) {
-		for (let y = 0; y < map.height; y +=1 ) {
-			if (Math.random() < 0.05) {
-				map.addAgent(new SimpleAgent(x, y))
+	return new Map(
+		600,
+		600,
+		[
+			{
+				'condition': (x, y, currentState) => {
+					return Math.random() < 0.05
+				},
+				'agentType': SimpleAgent,
+				'agentData': {}
 			}
-		}
-	}
-	return map
+		]
+	)
 }
