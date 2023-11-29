@@ -15,7 +15,7 @@ export class Map {
 		}
 	}
 
-	evaluate() {
+	evaluate(postHandler = (agentList) => {return agentList}) {
 		let nextState = new Matrix(this.height, this.width, Array)
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
@@ -24,6 +24,9 @@ export class Map {
 					agentList.forEach((agent) => {
 						agent.evaluate(this.storage, nextState)
 					})
+				}
+				if (!!postHandler && (typeof postHandler === 'function')) {
+					nextState.set(x, y, (postHandler)(nextState.get(x, y)))
 				}
 			}
 		}
