@@ -84,6 +84,7 @@ export class ImagePixels {
 				increaseImage.blueMatrix.set(x, y, this.blueMatrix.get(oldX, oldY))
 			}
 		}
+		increaseImage.fillImageData()
 		return increaseImage
 	}
 }
