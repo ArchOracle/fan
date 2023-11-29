@@ -54,4 +54,20 @@ export class ImagePixels {
 			context.putImageData(this.imageData, 0, 0)
 		}
 	}
+
+	getPixelColor(x, y) {
+		return {
+			alpha: this.alphaMatrix.get(x, y),
+			red: this.redMatrix.get(x, y),
+			green: this.greenMatrix.get(x, y),
+			blue: this.blueMatrix.get(x, y),
+		}
+	}
+
+	setPixelColor(x, y, color) {
+		this.alphaMatrix.set(x, y, color.alpha)
+		this.redMatrix.set(x, y, color.red)
+		this.greenMatrix.set(x, y, color.green)
+		this.blueMatrix.set(x, y, color.blue)
+	}
 }
