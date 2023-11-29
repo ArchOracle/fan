@@ -5,17 +5,19 @@ export class Map {
 	storage
 	height
 	width
+	postHandler
 
-	constructor(height, width, seedConfig = []) {
+	constructor(height, width, seedConfig = [], postHandler = (agentList) => {return agentList}) {
 		this.height = height
 		this.width = width
 		this.storage = new Matrix(height, width, Array)
 		if (seedConfig.length > 0) {
 			this.seed(seedConfig)
 		}
+		this.postHandler = postHandler
 	}
 
-	evaluate(postHandler = (agentList) => {return agentList}) {
+	evaluate() {
 		let nextState = new Matrix(this.height, this.width, Array)
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
@@ -25,8 +27,8 @@ export class Map {
 						agent.evaluate(this.storage, nextState)
 					})
 				}
-				if (!!postHandler && (typeof postHandler === 'function')) {
-					nextState.set(x, y, (postHandler)(nextState.get(x, y)))
+				if (!!this.postHandler && (typeof this.postHandler === 'function')) {
+					nextState.set(x, y, (this.postHandler)(nextState.get(x, y)))
 				}
 			}
 		}
