@@ -8,19 +8,30 @@
 <div>
 	<div>
 		<label>
-			FPS:
+			ФПС:
 			<input type="number" name="fps" value="5">
 		</label>
 	</div>
 	<div>
 		<label>
-			Render frames:
+			Отрендерить кадров:
 			<input type="number" name="frames_count" value="50">
+		</label>
+	</div>
+	<div>
+		<label>
+			Максимум времени на рендер и отрисовку:
+			<input type="number" name="max_execution_time" value="20">
 		</label>
 	</div>
 	<div>
 		<button name="go">Запустить!</button>
 	</div>
+	<div>
+		Посчитано кадров: <span id="currentCalculateCount"></span> / <span id="allCalculateCount"></span>
+		Отрисовано кадров: <span id="currentDrawCount"></span> / <span id="allDrawCount"></span>
+	</div>
+	<div id="isDone"></div>
 </div>
 <br>
 <canvas id="charge" height="600" width="600"></canvas>
