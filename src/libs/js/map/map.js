@@ -5,10 +5,13 @@ export class Map {
 	height
 	width
 
-	constructor(height, width) {
+	constructor(height, width, seedConfig = []) {
 		this.height = height
 		this.width = width
 		this.storage = new Matrix(height, width, Array)
+		if (seedConfig.length > 0) {
+			this.seed(seedConfig)
+		}
 	}
 
 	evaluate() {
