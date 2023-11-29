@@ -13,6 +13,7 @@ class Render {
 	currentDrawCount = 0
 
 	htmlEditor
+	htmlFinishElement
 
 	converter
 	snapshotList = []
@@ -26,6 +27,7 @@ class Render {
 		this.needFrameCount = config.needFrameCount
 		this.converter = config.converter
 		this.htmlEditor = config.htmlEditor
+		this.htmlFinishElement = config.htmlFinishElement
 		this.maxExecutionTime = config.maxExecutionTime
 	}
 
@@ -37,10 +39,10 @@ class Render {
 			this.drawSnapshotList()
 		}, 0)
 		setTimeout(() => {
-			clearInterval(this.drawIntervalId)
+			this.stopRender('Время вышло!')
 		}, this.maxExecutionTime)
 		setTimeout(() => {
-			clearInterval(this.drawIntervalId)
+			this.stopRender('Рендер завершён!')
 		}, this.needFrameCount / this.fps)
 	}
 
@@ -62,5 +64,10 @@ class Render {
 			this.context.putImageData(currentSnapshot.increaseSize(this.timesCanvasToMap).imageData)
 			this.currentDrawCount += 1
 		}, (1000 / this.fps))
+	}
+
+	stopRender(reason) {
+		clearInterval(this.drawIntervalId)
+		this.htmlFinishElement.innerText = reason
 	}
 }
