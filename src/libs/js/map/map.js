@@ -66,6 +66,7 @@ export class Map {
 				snapshot.setPixelColor(x, y, (converter)(agentList))
 			}
 		}
+		snapshot.fillImageData()
 		return snapshot
 	}
 }
