@@ -38,4 +38,16 @@ export class Map {
 		agentList.push(agent)
 		storage.set(agent.x, agent.y, agentList)
 	}
+
+	seed(config) {
+		for (let x = 0; x < this.width; x += 1) {
+			for (let y = 0; y < this.height; y +=1 ) {
+				config.forEach((configElement) => {
+					if ((configElement.condition)(x, y, this.storage)) {
+						this.addAgent(new (configElement.agentType)(x, y, configElement.agentData))
+					}
+				})
+			}
+		}
+	}
 }
