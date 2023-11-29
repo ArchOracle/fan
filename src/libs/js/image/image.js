@@ -70,4 +70,20 @@ export class ImagePixels {
 		this.greenMatrix.set(x, y, color.green)
 		this.blueMatrix.set(x, y, color.blue)
 	}
+
+	increaseSize(times = 1) {
+		times = Math.round(times)
+		let increaseImage = ImagePixels.create(times * this.height, times * this.width)
+		for (let y = 0; y < increaseImage.height; y += 1) {
+			for (let x = 0; x < increaseImage.width; x += 1) {
+				const oldX = Math.ceil(x / times)
+				const oldY = Math.ceil(y / times)
+				increaseImage.alphaMatrix.set(x, y, this.alphaMatrix.get(oldX, oldY))
+				increaseImage.redMatrix.set(x, y, this.redMatrix.get(oldX, oldY))
+				increaseImage.greenMatrix.set(x, y, this.greenMatrix.get(oldX, oldY))
+				increaseImage.blueMatrix.set(x, y, this.blueMatrix.get(oldX, oldY))
+			}
+		}
+		return increaseImage
+	}
 }
