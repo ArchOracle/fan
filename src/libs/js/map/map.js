@@ -1,4 +1,5 @@
 import {Matrix} from "../matrix/matrix";
+import {ImagePixels} from "../image/image";
 
 export class Map {
 	storage
@@ -52,5 +53,19 @@ export class Map {
 				})
 			}
 		}
+	}
+
+	getSnapshot(converter) {
+		let snapshot = ImagePixels.create(this.height, this.width)
+		for (let x = 0; x < this.width; x += 1) {
+			for (let y = 0; y < this.height; y +=1 ) {
+				let agentList = this.storage.get(x, y)
+				if (!Array.isArray(agentList)) {
+					agentList = []
+				}
+				snapshot.setPixelColor(x, y, (converter)(agentList))
+			}
+		}
+		return snapshot
 	}
 }
