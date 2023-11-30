@@ -38,8 +38,11 @@ function run() {
 			(agentList) => {
 				if (!agentList || !Array.isArray(agentList) || agentList.length === 0) {
 					return undefined
+				} else if (agentList.length < 5) {
+					return agentList
+				} else {
+					return [agentList[0],agentList[1],agentList[2],agentList[3],agentList[4]]
 				}
-				return [agentList[0]]
 			}
 		),
 		canvas: document.querySelector('#charge'),
