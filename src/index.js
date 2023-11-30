@@ -19,8 +19,8 @@ function run() {
 	document.querySelector('#allDrawCount').innerText = document.querySelector('[name=frames_count]').value
 	let render = Render.create({
 		map: new Map(
-			60,
-			60,
+			600,
+			600,
 			[
 				{
 					'condition': (x, y, currentState) => {
@@ -46,7 +46,7 @@ function run() {
 			}
 		),
 		canvas: document.querySelector('#charge'),
-		timesCanvasToMap: 10,
+		timesCanvasToMap: 1,
 		fps: document.querySelector('[name=fps]').value,
 		needFrameCount: document.querySelector('[name=frames_count]').value,
 		converter: (agentList) => {
