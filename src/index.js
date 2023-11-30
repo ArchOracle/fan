@@ -27,9 +27,15 @@ function run() {
 						return Math.random() < 0.05
 					},
 					'agentType': SimpleAgent,
-					'agentData': {}
+					'agentData': (x, y) => {return {x: x, y: y}}
 				}
-			]
+			],
+			(agentList) => {
+				if (!agentList || !Array.isArray(agentList) || agentList.length === 0) {
+					return []
+				}
+				return [agentList[0]]
+			}
 		),
 		canvas: document.querySelector('#charge'),
 		timesCanvasToMap: 1,
