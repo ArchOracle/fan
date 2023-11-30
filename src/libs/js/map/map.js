@@ -53,7 +53,7 @@ export class Map {
 			for (let y = 0; y < this.height; y +=1 ) {
 				config.forEach((configElement) => {
 					if ((configElement.condition)(x, y, this.storage)) {
-						this.addAgent(new (configElement.agentType)(x, y, configElement.agentData))
+						this.addAgent(new (configElement.agentType)(x, y, (configElement.agentData)(x, y)))
 					}
 				})
 			}
