@@ -75,7 +75,7 @@ export class ImagePixels {
 		if (times === 1) {
 			return this
 		}
-		times = Math.round(times)
+		//times = Math.round(times)
 		let increaseImage = ImagePixels.create(times * this.height, times * this.width)
 		for (let y = 0; y < increaseImage.height; y += 1) {
 			for (let x = 0; x < increaseImage.width; x += 1) {
