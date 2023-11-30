@@ -31,3 +31,25 @@ export class SimpleAgent extends Agent{
 		}
 	}
 }
+
+export class Source extends Agent
+{
+	evaluate(currentState, nextState) {
+		super.evaluate(currentState, nextState);
+
+	}
+}
+
+export class Corpuscle extends Agent
+{
+	evaluate(currentState, nextState) {
+		super.evaluate(currentState, nextState);
+	}
+}
+
+export class Field extends Agent
+{
+	evaluate(currentState, nextState) {
+		super.evaluate(currentState, nextState);
+	}
+}
