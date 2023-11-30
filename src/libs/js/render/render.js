@@ -18,6 +18,10 @@ export class Render {
 	converter
 	snapshotList = []
 
+	static create(config) {
+		return new Render(config)
+	}
+
 	constructor(config) {
 		this.map = config.map
 		this.canvas = config.map
