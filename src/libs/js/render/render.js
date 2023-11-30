@@ -41,13 +41,10 @@ export class Render {
 		}, 0)
 		setTimeout(() => {
 			this.drawSnapshotList()
-		}, 0)
-		setTimeout(() => {
+		}, 10)
+		this.maxExecutionTimer = setTimeout(() => {
 			this.stopRender('Время вышло!')
-		}, this.maxExecutionTime)
-		setTimeout(() => {
-			this.stopRender('Рендер завершён!')
-		}, this.needFrameCount / this.fps)
+		}, this.maxExecutionTime * 1000)
 	}
 
 	calculateSnapshotList() {
@@ -65,13 +62,21 @@ export class Render {
 	drawSnapshotList() {
 		this.drawIntervalId = setInterval(() => {
 			const currentSnapshot = this.snapshotList[this.currentDrawCount]
-			this.context.putImageData(currentSnapshot.increaseSize(this.timesCanvasToMap).imageData)
-			this.currentDrawCount += 1
+			this.context.putImageData(currentSnapshot.increaseSize(this.timesCanvasToMap).imageData, 0, 0)
+			this.currentDrawCount += 1;
+			(this.htmlEditor)({
+				currentCalculateCount: this.currentCalculateCount,
+				currentDrawCount: this.currentDrawCount,
+			})
+			if (this.currentDrawCount >= this.snapshotList.length) {
+				this.stopRender('Рендер завершён!')
+			}
 		}, (1000 / this.fps))
 	}
 
 	stopRender(reason) {
 		clearInterval(this.drawIntervalId)
+		clearTimeout(this.maxExecutionTimer)
 		this.htmlFinishElement.innerText = reason
 	}
 }
