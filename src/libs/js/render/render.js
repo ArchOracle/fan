@@ -26,7 +26,7 @@ export class Render {
 		this.map = config.map
 		this.canvas = config.canvas
 		this.timesCanvasToMap = config.timesCanvasToMap
-		this.context = this.canvas.getContext('2d')
+		this.context = this.canvas.getContext('2d', {alpha: false})
 		this.fps = config.fps
 		this.needFrameCount = config.needFrameCount
 		this.converter = config.converter
