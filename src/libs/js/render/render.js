@@ -1,4 +1,4 @@
-class Render {
+export class Render {
 	map
 
 	canvas
