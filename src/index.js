@@ -27,7 +27,12 @@ function run() {
 						return x % 4 === 0 && y % 4 === 0
 					},
 					'agentType': SimpleAgent,
-					'agentData': (x, y) => {return {x: x, y: y}}
+					'agentData': (x, y) => {return {
+						x: x,
+						y: y,
+						dx: 0,
+						dy: 0
+					}}
 				}
 			],
 			(agentList) => {

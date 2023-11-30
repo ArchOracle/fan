@@ -14,12 +14,20 @@ export class SimpleAgent extends Agent{
 		const yy = (this.agentData.y - oy)
 		const s = (xx ** 2 + yy ** 2) ** 0.5
 		const v = s / ((ox ** 2 + oy ** 2) ** 0.5)
-		const dx = -1 * (v * xx / 20)
-		const dy = -1 * (v * yy / 20)
+		const dx = this.agentData.dx - (v * xx / 20)
+		const dy = this.agentData.dx - (v * yy / 20)
 		const newX = ox + xx + dx
 		const newY = oy + yy + dy
 		if (newX > 1 && newX < 599 && newY > 1 && newY < 599) {
-			Map.addAgentToStorage(new SimpleAgent(Math.round(newX), Math.round(newY), {x: newX, y: newY}), nextState)
+			this.x = Math.round(newX)
+			this.y = Math.round(newY)
+			this.agentData = {
+				x: newX,
+				y: newY,
+				dx: dx,
+				dy: dy
+			}
+			Map.addAgentToStorage(this, nextState)
 		}
 	}
 }
