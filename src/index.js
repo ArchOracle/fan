@@ -32,7 +32,7 @@ function run() {
 			],
 			(agentList) => {
 				if (!agentList || !Array.isArray(agentList) || agentList.length === 0) {
-					return []
+					return undefined
 				}
 				return [agentList[0]]
 			}
@@ -50,11 +50,7 @@ function run() {
 			}
 			if (Array.isArray(agentList)) {
 				if (agentList.length > 0) {
-					if (Math.random() > Math.random() * Math.random()) {
-						pixel.red = 255
-					} else {
-						pixel.green = 255
-					}
+					pixel.red = 255
 				}
 			}
 			return pixel
