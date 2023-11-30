@@ -24,7 +24,7 @@ function run() {
 			[
 				{
 					'condition': (x, y, currentState) => {
-						return Math.random() < 0.05
+						return x % 4 === 0 && y % 4 === 0
 					},
 					'agentType': SimpleAgent,
 					'agentData': (x, y) => {return {x: x, y: y}}
