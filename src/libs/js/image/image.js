@@ -79,8 +79,8 @@ export class ImagePixels {
 		let increaseImage = ImagePixels.create(times * this.height, times * this.width)
 		for (let y = 0; y < increaseImage.height; y += 1) {
 			for (let x = 0; x < increaseImage.width; x += 1) {
-				const oldX = Math.ceil(x / times)
-				const oldY = Math.ceil(y / times)
+				const oldX = Math.floor(x / times)
+				const oldY = Math.floor(y / times)
 				increaseImage.alphaMatrix.set(x, y, this.alphaMatrix.get(oldX, oldY))
 				increaseImage.redMatrix.set(x, y, this.redMatrix.get(oldX, oldY))
 				increaseImage.greenMatrix.set(x, y, this.greenMatrix.get(oldX, oldY))
