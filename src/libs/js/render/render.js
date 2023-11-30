@@ -44,11 +44,12 @@ export class Render {
 		}, 10)
 		this.maxExecutionTimer = setTimeout(() => {
 			this.stopRender('Время вышло!')
+			this.stopCalculate()
 		}, this.maxExecutionTime * 1000)
 	}
 
 	calculateSnapshotList() {
-		for (let i = 0; i < this.needFrameCount; i += 1) {
+		this.calculateIntervalId = setInterval(() => {
 			this.snapshotList.push(this.map.getSnapshot(this.converter))
 			this.currentCalculateCount += 1;
 			(this.htmlEditor)({
@@ -56,7 +57,10 @@ export class Render {
 				currentDrawCount: this.currentDrawCount,
 			})
 			this.map.evaluate()
-		}
+			if (this.currentCalculateCount >= this.needFrameCount) {
+				this.stopCalculate()
+			}
+		}, 1)
 	}
 
 	drawSnapshotList() {
@@ -78,5 +82,8 @@ export class Render {
 		clearInterval(this.drawIntervalId)
 		clearTimeout(this.maxExecutionTimer)
 		this.htmlFinishElement.innerText = reason
+	}
+	stopCalculate() {
+		clearInterval(this.calculateIntervalId)
 	}
 }
