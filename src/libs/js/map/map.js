@@ -66,7 +66,7 @@ export class Map {
 			for (let y = 0; y < this.height; y +=1 ) {
 				let agentList = this.storage.get(x, y)
 				if (!Array.isArray(agentList)) {
-					agentList = []
+					agentList = undefined
 				}
 				snapshot.setPixelColor(x, y, (converter)(agentList))
 			}
