@@ -1,6 +1,7 @@
 import {ImagePixels} from "./libs/js/image/image";
 import {Map} from "./libs/js/map/map";
 import {SimpleAgent} from "./simple_charge/agents";
+import {Render} from "./libs/js/render/render";
 
 if (window.location.pathname === "/simple_charge/index.html") {
 	document.addEventListener('DOMContentLoaded', () => {
@@ -13,45 +14,51 @@ if (window.location.pathname === "/simple_charge/index.html") {
 }
 
 function run() {
-	let map = seedTestMap()
-	createTestImage('#charge')
-}
 
-function createTestImage(canvasSelector) {
-	let canvas = document.querySelector(canvasSelector)
-	let context = canvas.getContext('2d')
-
-	let imagePixel = new ImagePixels(context.createImageData(canvas.height, canvas.width))
-
-	for (let x = 0; x < imagePixel.width; x += 1) {
-		for (let y = 0; y < imagePixel.height; y +=1 ) {
-			imagePixel.alphaMatrix.set(x, y, 255)
-			if (Math.random() < 0.05) {
-				imagePixel.redMatrix.set(x, y, 255)
+	document.querySelector('#allCalculateCount').innerText = document.querySelector('[name=frames_count]').value
+	document.querySelector('#allDrawCount').innerText = document.querySelector('[name=frames_count]').value
+	let render = Render.create({
+		map: new Map(
+			600,
+			600,
+			[
+				{
+					'condition': (x, y, currentState) => {
+						return Math.random() < 0.05
+					},
+					'agentType': SimpleAgent,
+					'agentData': {}
+				}
+			]
+		),
+		canvas: document.querySelector('#charge'),
+		timesCanvasToMap: 1,
+		fps: document.querySelector('[name=fps]').value,
+		needFrameCount: document.querySelector('[name=frames_count]').value,
+		converter: (agentList) => {
+			let pixel = {
+				red: 0,
+				green: 0,
+				blue: 0,
+				alpha: 255,
 			}
-			if (Math.random() < 0.05) {
-				imagePixel.greenMatrix.set(x, y, 255)
+			if (Array.isArray(agentList)) {
+				if (agentList.length > 0) {
+					if (Math.random() > Math.random() * Math.random()) {
+						pixel.red = 255
+					} else {
+						pixel.green = 255
+					}
+				}
 			}
-			if (Math.random() < 0.05) {
-				imagePixel.blueMatrix.set(x, y, 255)
-			}
-		}
-	}
-	imagePixel.fillImageData(context)
-}
-
-function seedTestMap() {
-	return new Map(
-		600,
-		600,
-		[
-			{
-				'condition': (x, y, currentState) => {
-					return Math.random() < 0.05
-				},
-				'agentType': SimpleAgent,
-				'agentData': {}
-			}
-		]
-	)
+			return pixel
+		},
+		htmlEditor: (params) => {
+			document.querySelector('#currentCalculateCount').innerText = params.currentCalculateCount
+			document.querySelector('#currentDrawCount').innerText = params.currentDrawCount
+		},
+		htmlFinishElement: document.querySelector('#isDone'),
+		maxExecutionTime: document.querySelector('[name=max_execution_time]').value
+	})
+	//render.run()
 }
