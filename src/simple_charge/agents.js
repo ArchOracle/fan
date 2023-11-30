@@ -8,8 +8,8 @@ export class SimpleAgent extends Agent{
 	}
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState)
-		const ox = thisState.width / 2
-		const oy = thisState.height / 2
+		const ox = currentState.width / 2
+		const oy = currentState.height / 2
 		const xx = (this.agentData.x - ox)
 		const yy = (this.agentData.y - oy)
 		const s = (xx ** 2 + yy ** 2) ** 0.5
