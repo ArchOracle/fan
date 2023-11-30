@@ -60,5 +60,5 @@ function run() {
 		htmlFinishElement: document.querySelector('#isDone'),
 		maxExecutionTime: document.querySelector('[name=max_execution_time]').value
 	})
-	//render.run()
+	render.run()
 }
