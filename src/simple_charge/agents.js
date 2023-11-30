@@ -6,8 +6,8 @@ export class SimpleAgent extends Agent{
 	constructor(x, y, agentData) {
 		super(x, y, agentData);
 	}
-	evaluate(thisState, nextState) {
-		super.evaluate(thisState, nextState)
+	evaluate(currentState, nextState) {
+		super.evaluate(currentState, nextState)
 		const ox = thisState.width / 2
 		const oy = thisState.height / 2
 		const xx = (this.agentData.x - ox)

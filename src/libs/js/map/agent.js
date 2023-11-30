@@ -10,8 +10,8 @@ export class Agent {
 		this.agentData = agentData
 	}
 
-	evaluate(thisState, nextState) {
-		if (!(thisState instanceof Matrix) || !(nextState instanceof Matrix)) {
+	evaluate(currentState, nextState) {
+		if (!(currentState instanceof Matrix) || !(nextState instanceof Matrix)) {
 			throw new Error('Состояния должны быть матрицами!')
 		}
 	}
