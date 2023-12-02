@@ -41,7 +41,17 @@ export class Source extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
-
+		const sd = Math.floor(Math.random() * 8)
+		const d = (sd >= 4 ? sd + 1 : sd) - 4
+		const dx = d % 3
+		const dy = (d / 3) | 0
+		Map.addAgentToStorage(this, nextState)
+		Map.addAgentToStorage(new Corpuscle(this.x + dx, this.y + dy, {
+			count: 1,
+			x: this.x + dx,
+			y: this.y + dy,
+		}), nextState)
+		Field.fillArea({x: this.x, y: this.y}, 1, currentState, nextState)
 	}
 }
 
