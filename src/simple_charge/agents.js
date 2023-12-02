@@ -32,7 +32,12 @@ export class SimpleAgent extends Agent{
 	}
 }
 
-export class Source extends Agent
+export class Charge extends Agent
+{
+
+}
+
+export class Source extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
@@ -40,14 +45,14 @@ export class Source extends Agent
 	}
 }
 
-export class Corpuscle extends Agent
+export class Corpuscle extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
 	}
 }
 
-export class Field extends Agent
+export class Field extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
