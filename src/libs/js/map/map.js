@@ -27,6 +27,10 @@ export class Map {
 						agent.evaluate(this.storage, nextState)
 					})
 				}
+			}
+		}
+		for (let y = 0; y < this.height; y += 1) {
+			for (let x = 0; x < this.width; x += 1) {
 				if (!!this.postHandler && (typeof this.postHandler === 'function')) {
 					nextState.set(x, y, (this.postHandler)(nextState.get(x, y)))
 				}
