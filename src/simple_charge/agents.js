@@ -56,6 +56,7 @@ export class Field extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
+		Field.fillArea({x: this.x, y: this.y}, this.agentData.energy, currentState, nextState)
 	}
 
 	static fillArea(center, currentEnergy, currentState, nextState) {
