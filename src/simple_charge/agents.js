@@ -57,4 +57,15 @@ export class Field extends Charge
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
 	}
+
+	static fillArea(center, currentEnergy, currentState, nextState) {
+		const dE = currentEnergy / 9
+		for (let x = center.x - 1; x <= center.x + 1; x += 1) {
+			for (let y = center.y - 1; y <= center.y + 1; y += 1) {
+				Map.addAgentToStorage(new Field(x, y, {
+					energy: dE
+				}), nextState)
+			}
+		}
+	}
 }
