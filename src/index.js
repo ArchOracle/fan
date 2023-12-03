@@ -1,6 +1,6 @@
 import {ImagePixels} from "./libs/js/image/image";
 import {Map} from "./libs/js/map/map";
-import {SimpleAgent} from "./simple_charge/agents";
+import {Corpuscle, Field, SimpleAgent, Source} from "./simple_charge/agents";
 import {Render} from "./libs/js/render/render";
 
 if (window.location.pathname === "/simple_charge/index.html") {
@@ -24,9 +24,9 @@ function run() {
 			[
 				{
 					'condition': (x, y, currentState) => {
-						return x % 4 === 0 && y % 4 === 0
+						return x === 50 && y === 50
 					},
-					'agentType': SimpleAgent,
+					'agentType': Source,
 					'agentData': (x, y) => {return {
 						x: x,
 						y: y,
