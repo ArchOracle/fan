@@ -117,16 +117,20 @@ export class Charge extends Agent
 		if (Array.isArray(agentList)) {
 			const corpuscle = Charge.getCorpuscleFromAgentList(agentList)
 			const field = Charge.getFieldFromAgentList(agentList)
-			if (corpuscle.getCharge() > 0) {
-				pixel.red = 255
-			} else if (corpuscle.getCharge() < 0) {
-				pixel.green = 255
-			} else {
-				pixel.red = 255
-				pixel.green = 255
-				pixel.blue = 255
+			if (!!corpuscle) {
+				if (corpuscle.getCharge() > 0) {
+					pixel.red = 255
+				} else if (corpuscle.getCharge() < 0) {
+					pixel.green = 255
+				} else {
+					pixel.red = 255
+					pixel.green = 255
+					pixel.blue = 255
+				}
 			}
-			pixel.blue = Math.min(Math.floor(field.agentData.energy * 100), 255)
+			if (!!field) {
+				pixel.blue = Math.min(Math.floor(field.agentData.energy * 100), 255)
+			}
 		}
 		return pixel
 	}
@@ -188,6 +192,9 @@ export class Corpuscle extends Charge
 					continue
 				}
 				const field = Charge.getFieldFromAgentList(agentList)
+				if (!field) {
+					continue
+				}
 				const energy = field.agentData.energy * (1 + Math.random() * 0.1)
 				if (
 						(vector.energy > energy && field.getCharge() === this.getCharge())
