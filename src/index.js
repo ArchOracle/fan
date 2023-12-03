@@ -57,9 +57,17 @@ function run() {
 				alpha: 255,
 			}
 			if (Array.isArray(agentList)) {
-				if (agentList.length > 0) {
-					pixel.red = 255
-				}
+				agentList.forEach((agent) => {
+					if (agent instanceof Corpuscle) {
+						pixel.red = Math.min(agent.agentData.count * 150, 255)
+					}
+					if (agent instanceof Field) {
+						pixel.blue = Math.min(agent.agentData.energy * 50, 255)
+					}
+					if (agent instanceof Source) {
+						pixel.green = 255
+					}
+				})
 			}
 			return pixel
 		},
