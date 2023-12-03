@@ -106,6 +106,34 @@ export class Charge extends Agent
 			return agentList
 		}
 	}
+
+	static converter(agentList) {
+		let pixel = {
+			red: 0,
+			green: 0,
+			blue: 0,
+			alpha: 255,
+		}
+		if (Array.isArray(agentList)) {
+			agentList.forEach((agent) => {
+				if (agent instanceof Corpuscle) {
+					if (agent.agentData.charge > 0) {
+						pixel.red = 255
+					} else if (agent.agentData.charge < 0) {
+						pixel.green = 255
+					} else {
+						pixel.red = 255
+						pixel.green = 255
+						pixel.blue = 255
+					}
+				}
+				if (agent instanceof Field) {
+					pixel.blue = Math.min(agent.agentData.energy * 100, 255)
+				}
+			})
+		}
+		return pixel
+	}
 }
 
 export class Source extends Charge

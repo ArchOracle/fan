@@ -42,33 +42,7 @@ function run() {
 		timesCanvasToMap: 6,
 		fps: document.querySelector('[name=fps]').value,
 		needFrameCount: document.querySelector('[name=frames_count]').value,
-		converter: (agentList) => {
-			let pixel = {
-				red: 0,
-				green: 0,
-				blue: 0,
-				alpha: 255,
-			}
-			if (Array.isArray(agentList)) {
-				agentList.forEach((agent) => {
-					if (agent instanceof Corpuscle) {
-						if (agent.agentData.charge > 0) {
-							pixel.red = 255
-						} else if (agent.agentData.charge < 0) {
-							pixel.green = 255
-						} else {
-							pixel.red = 255
-							pixel.green = 255
-							pixel.blue = 255
-						}
-					}
-					if (agent instanceof Field) {
-						pixel.blue = Math.min(agent.agentData.energy * 100, 255)
-					}
-				})
-			}
-			return pixel
-		},
+		converter: Charge.converter,
 		htmlEditor: (params) => {
 			document.querySelector('#currentCalculateCount').innerText = params.currentCalculateCount
 			document.querySelector('#currentDrawCount').innerText = params.currentDrawCount
