@@ -115,22 +115,18 @@ export class Charge extends Agent
 			alpha: 255,
 		}
 		if (Array.isArray(agentList)) {
-			agentList.forEach((agent) => {
-				if (agent instanceof Corpuscle) {
-					if (agent.agentData.charge > 0) {
-						pixel.red = 255
-					} else if (agent.agentData.charge < 0) {
-						pixel.green = 255
-					} else {
-						pixel.red = 255
-						pixel.green = 255
-						pixel.blue = 255
-					}
-				}
-				if (agent instanceof Field) {
-					pixel.blue = Math.min(agent.agentData.energy * 100, 255)
-				}
-			})
+			const corpuscle = Charge.getCorpuscleFromAgentList(agentList)
+			const field = Charge.getFieldFromAgentList(agentList)
+			if (corpuscle.getCharge() > 0) {
+				pixel.red = 255
+			} else if (corpuscle.getCharge() < 0) {
+				pixel.green = 255
+			} else {
+				pixel.red = 255
+				pixel.green = 255
+				pixel.blue = 255
+			}
+			pixel.blue = Math.min(Math.floor(field.agentData.energy * 100), 255)
 		}
 		return pixel
 	}
