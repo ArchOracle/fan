@@ -38,10 +38,48 @@ function run() {
 			(agentList) => {
 				if (!agentList || !Array.isArray(agentList) || agentList.length === 0) {
 					return undefined
-				} else if (agentList.length < 5) {
-					return agentList
 				} else {
-					return [agentList[0],agentList[1],agentList[2],agentList[3],agentList[4]]
+					let corpuscleCharge = 0
+					let agentX = 0
+					let agentY = 0
+					let fieldEnergy = 0
+					let isNeedSource = false
+					let isNeedCorpuscle = false
+					let isNeedField = false
+					agentList.forEach((agent) => {
+						agentX = agent.x
+						agentY = agent.y
+						if (agent instanceof Source) {
+							isNeedSource = true
+						}
+						if (agent instanceof Corpuscle) {
+							corpuscleCharge += agent.agentData.count
+							isNeedCorpuscle = true
+						}
+						if (agent instanceof Field) {
+							isNeedField = true
+							fieldEnergy += agent.agentData.energy
+						}
+					})
+					agentList = []
+					if (isNeedSource) {
+						agentList.push(new Source(agentX, agentY, {x: agentX, y: agentY}))
+					}
+					if (isNeedCorpuscle) {
+						agentList.push(new Corpuscle(agentX, agentY, {
+							x: agentX,
+							y: agentY,
+							count: corpuscleCharge
+						}))
+					}
+					if (isNeedField) {
+						agentList.push(new Field(agentX, agentY, {
+							x: agentX,
+							y: agentY,
+							energy: fieldEnergy
+						}))
+					}
+					return agentList
 				}
 			}
 		),
