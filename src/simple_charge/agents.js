@@ -51,7 +51,7 @@ export class Source extends Charge
 			x: this.x + dx,
 			y: this.y + dy,
 		}), nextState)
-		Field.fillArea({x: this.x, y: this.y}, 1, currentState, nextState)
+		Field.fillArea({x: this.x, y: this.y}, 10, currentState, nextState)
 	}
 }
 
