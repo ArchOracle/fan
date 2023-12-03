@@ -134,6 +134,18 @@ export class Charge extends Agent
 		}
 		return pixel
 	}
+
+	static getSourceFromAgentList(agentList) {
+		return agentList[0]
+	}
+
+	static getCorpuscleFromAgentList(agentList) {
+		return agentList[1]
+	}
+
+	static getFieldFromAgentList(agentList) {
+		return agentList[2]
+	}
 }
 
 export class Source extends Charge
