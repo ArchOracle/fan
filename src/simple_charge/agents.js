@@ -59,17 +59,17 @@ export class Corpuscle extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
-		const vector = this.getVectorMinimalField(currentState)
-		Map.addAgentToStorage(new Corpuscle(this.x + vector.x, this.y + vector.y, {
+		let vector = this.getVectorMinimalField(currentState)
+		Map.addAgentToStorage(new Corpuscle(this.x + vector.dx, this.y + vector.dy, {
 			count: 1,
-			x: this.x + dx,
-			y: this.y + dy,
+			x: this.x + vector.dx,
+			y: this.y + vector.dy,
 		}), nextState)
 		Field.fillArea({x: this.x, y: this.y}, 1, currentState, nextState)
 	}
 
 	getVectorMinimalField(currentState) {
-		let vector = {energy: 1000000}
+		let vector = {energy: 1000000, x: 0, y: 0}
 		for (let x = this.x - 1; x <= this.x + 1; x += 1) {
 			for (let y = this.y - 1; y <= this.y + 1; y += 1) {
 				let agentList = currentState.get(x, y)
@@ -79,11 +79,11 @@ export class Corpuscle extends Charge
 				agentList.forEach((agent) => {
 					const energy = agent.agentData.energy * (1 + Math.random() / 10)
 					if (agent instanceof Field && vector.energy > energy) {
-						vector = ({
+						vector = {
 							energy: energy,
 							dx: x - this.x,
 							dy: y - this.y
-						})
+						}
 					}
 				})
 			}
