@@ -51,6 +51,61 @@ export class Charge extends Agent
 	setCharge(charge) {
 		this.agentData.charge = charge
 	}
+
+	static postHandler(agentList) {
+		if (
+			!agentList || !Array.isArray(agentList) || agentList.length === 0
+			|| !(agentList[0].x > 2 && agentList[0].x < 99 && agentList[0].y > 2 && agentList[0].y < 99)
+		) {
+			return undefined
+		} else {
+			let corpuscleCharge = 0
+			let agentX = 0
+			let agentY = 0
+			let fieldEnergy = 0
+			let isNeedSource = false
+			let chargeSource = false
+			let isNeedCorpuscle = false
+			let isNeedField = false
+			agentList.forEach((agent) => {
+				agentX = agent.x
+				agentY = agent.y
+				if (agent instanceof Source) {
+					isNeedSource = true
+					chargeSource = agent.agentData.charge
+				}
+				if (agent instanceof Corpuscle) {
+					corpuscleCharge += agent.agentData.count * agent.agentData.charge
+					isNeedCorpuscle = true
+				}
+				if (agent instanceof Field) {
+					isNeedField = true
+					fieldEnergy += agent.agentData.energy * agent.agentData.charge
+				}
+			})
+			agentList = []
+			if (isNeedSource) {
+				agentList.push(new Source(agentX, agentY, {x: agentX, y: agentY, charge: chargeSource}))
+			}
+			if (isNeedCorpuscle) {
+				agentList.push(new Corpuscle(agentX, agentY, {
+					x: agentX,
+					y: agentY,
+					count: Math.abs(corpuscleCharge),
+					charge: Math.sign(corpuscleCharge)
+				}))
+			}
+			if (isNeedField) {
+				agentList.push(new Field(agentX, agentY, {
+					x: agentX,
+					y: agentY,
+					energy: Math.abs(fieldEnergy),
+					charge: Math.sign(fieldEnergy)
+				}))
+			}
+			return agentList
+		}
+	}
 }
 
 export class Source extends Charge
