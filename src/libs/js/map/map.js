@@ -6,6 +6,7 @@ export class Map {
 	height
 	width
 	postHandler
+	static agentCount = 0
 
 	constructor(height, width, seedConfig = [], postHandler = (agentList) => {return agentList}) {
 		this.height = height
@@ -19,11 +20,13 @@ export class Map {
 
 	evaluate() {
 		let nextState = new Matrix(this.height, this.width, Array)
+		Map.agentCount = 0
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
 				let agentList = this.storage.get(x, y)
 				if (Array.isArray(agentList)) {
 					agentList.forEach((agent) => {
+						Map.agentCount += 1
 						agent.evaluate(this.storage, nextState)
 					})
 				}

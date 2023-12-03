@@ -66,6 +66,7 @@ function run() {
 		htmlEditor: (params) => {
 			document.querySelector('#currentCalculateCount').innerText = params.currentCalculateCount
 			document.querySelector('#currentDrawCount').innerText = params.currentDrawCount
+			document.querySelector('#agentCount').innerText = Map.agentCount
 		},
 		htmlFinishElement: document.querySelector('#isDone'),
 		maxExecutionTime: document.querySelector('[name=max_execution_time]').value
