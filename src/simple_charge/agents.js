@@ -187,22 +187,18 @@ export class Corpuscle extends Charge
 				if (!Array.isArray(agentList)) {
 					continue
 				}
-				agentList.forEach((agent) => {
-					const energy = agent.agentData.energy * (1 + Math.random() / 10)
-					if (
-						agent instanceof Field
-						&& (
-							(vector.energy > energy && agent.getCharge() === this.getCharge())
-							|| (vector.energy < energy && agent.getCharge() !== this.getCharge())
-						)
-					) {
-						vector = {
-							energy: energy,
-							dx: x - this.x,
-							dy: y - this.y
-						}
+				const field = Charge.getFieldFromAgentList(agentList)
+				const energy = field.agentData.energy * (1 + Math.random() * 0.1)
+				if (
+						(vector.energy > energy && field.getCharge() === this.getCharge())
+						|| (vector.energy < energy && field.getCharge() !== this.getCharge())
+				) {
+					vector = {
+						energy: energy,
+						dx: x - this.x,
+						dy: y - this.y
 					}
-				})
+				}
 			}
 		}
 		vector.dx = Math.sign(vector.dx)
