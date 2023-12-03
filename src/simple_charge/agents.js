@@ -85,23 +85,23 @@ export class Charge extends Agent
 			})
 			agentList = []
 			if (isNeedSource) {
-				agentList.push(new Source(agentX, agentY, {x: agentX, y: agentY, charge: chargeSource}))
+				agentList[0] = new Source(agentX, agentY, {x: agentX, y: agentY, charge: chargeSource})
 			}
 			if (isNeedCorpuscle) {
-				agentList.push(new Corpuscle(agentX, agentY, {
+				agentList[1] = new Corpuscle(agentX, agentY, {
 					x: agentX,
 					y: agentY,
 					count: Math.abs(corpuscleCharge),
 					charge: Math.sign(corpuscleCharge)
-				}))
+				})
 			}
 			if (isNeedField) {
-				agentList.push(new Field(agentX, agentY, {
+				agentList[2] = new Field(agentX, agentY, {
 					x: agentX,
 					y: agentY,
 					energy: Math.abs(fieldEnergy),
 					charge: Math.sign(fieldEnergy)
-				}))
+				})
 			}
 			return agentList
 		}
