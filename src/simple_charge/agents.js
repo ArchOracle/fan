@@ -141,15 +141,27 @@ export class Charge extends Agent
 	}
 
 	static getSourceFromAgentList(agentList) {
-		return agentList[0]
+		if (Array.isArray(agentList)) {
+			return agentList[0]
+		} else {
+			return undefined
+		}
 	}
 
 	static getCorpuscleFromAgentList(agentList) {
-		return agentList[1]
+		if (Array.isArray(agentList)) {
+			return agentList[1]
+		} else {
+			return undefined
+		}
 	}
 
 	static getFieldFromAgentList(agentList) {
-		return agentList[2]
+		if (Array.isArray(agentList)) {
+			return agentList[2]
+		} else {
+			return undefined
+		}
 	}
 }
 
