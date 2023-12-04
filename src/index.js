@@ -24,7 +24,7 @@ function run() {
 			[
 				{
 					'condition': (x, y, currentState) => {
-						return (x === 30 && y === 30) || (x === 70 && y === 70)
+						return (x === 50 && y === 30) || (x === 50 && y === 70)
 					},
 					'agentType': Source,
 					'agentData': (x, y) => {return {
@@ -32,7 +32,7 @@ function run() {
 						y: y,
 						dx: 0,
 						dy: 0,
-						charge: (x < 50 && y < 50) ? +1 : -1
+						charge: (x === 50 && y === 30) ? +1 : -1
 					}}
 				}
 			],
