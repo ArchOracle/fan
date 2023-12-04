@@ -117,17 +117,17 @@ export class Charge extends Agent
 		if (Array.isArray(agentList)) {
 			const corpuscle = Charge.getCorpuscleFromAgentList(agentList)
 			const field = Charge.getFieldFromAgentList(agentList)
-			if (!!corpuscle) {
-				if (corpuscle.getCharge() > 0) {
-					pixel.red = 255
-				} else if (corpuscle.getCharge() < 0) {
-					pixel.green = 255
-				} else {
-					pixel.red = 255
-					pixel.green = 255
-					pixel.blue = 255
-				}
-			}
+			// if (!!corpuscle) {
+			// 	if (corpuscle.getCharge() > 0) {
+			// 		pixel.red = 255
+			// 	} else if (corpuscle.getCharge() < 0) {
+			// 		pixel.green = 255
+			// 	} else {
+			// 		pixel.red = 255
+			// 		pixel.green = 255
+			// 		pixel.blue = 255
+			// 	}
+			// }
 			if (!!field) {
 				pixel.blue = Math.min(Math.floor(field.agentData.energy * 100), 255)
 			}
