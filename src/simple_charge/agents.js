@@ -129,7 +129,12 @@ export class Charge extends Agent
 			// 	}
 			// }
 			if (!!field) {
-				pixel.blue = Math.min(Math.floor(field.agentData.energy * 100), 255)
+				pixel.blue = Math.min(Math.floor(field.agentData.energy * 20), 255)
+				if (field.getCharge() > 0) {
+					pixel.red = pixel.blue
+				} else {
+					pixel.green = pixel.blue
+				}
 			}
 		}
 		return pixel
