@@ -242,10 +242,24 @@ export class Field extends Charge
 		const dE = 1 * currentEnergy / 121
 		for (let x = center.x - 5; x <= center.x + 5; x += 1) {
 			for (let y = center.y - 5; y <= center.y + 5; y += 1) {
-				Map.addAgentToStorage(new Field(x, y, {
-					energy: dE,
-					charge: charge
-				}), nextState)
+				if (Charge.getFieldFromAgentList(nextState.get(x,y))) {
+					let field = Charge.getFieldFromAgentList(nextState.get(x, y))
+					field.energy += dE * charge
+					field.charge = field.energy > 0 ? +1 : (field.energy < 0 ? -1 : 0)
+				} else {
+					if (!Charge.getFieldFromAgentList(currentState.get(x,y))) {
+						Map.addAgentToStorage(new Field(x, y, {
+							energy: dE,
+							charge: charge
+						}), nextState)
+					} else {
+						let field = Charge.getFieldFromAgentList(currentState.get(x, y))
+						field.energy += dE * charge
+						field.charge = field.energy > 0 ? +1 : (field.energy < 0 ? -1 : 0)
+						Map.addAgentToStorage(field, nextState)
+					}
+
+				}
 			}
 		}
 	}
