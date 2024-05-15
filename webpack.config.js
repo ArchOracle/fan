@@ -11,11 +11,21 @@ module.exports = {
 
 	module: {
 		rules: [
+			{
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			},
+
 			// {
 			// 	test: /\.css$/, // Регулярное выражение для обработки файлов с расширением .css
 			// 	use: ['style-loader', 'css-loader'], // Загрузчики, используемые для обработки CSS-файлов
 			// },
 		],
+	},
+
+	resolve: {
+		extensions: [ '.tsx', '.ts', '.js' ],
 	},
 
 	plugins: [

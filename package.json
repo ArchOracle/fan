@@ -2,8 +2,7 @@
   "name": "fan",
   "version": "1.0.0",
   "dependencies": {
-    "lodash": "^4.17.21",
-    "typescript": "^5.4.5"
+    "lodash": "^4.17.21"
   },
   "scripts": {
     "start": "webpack serve",
@@ -12,6 +11,8 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "html-webpack-plugin": "^5.5.3",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
