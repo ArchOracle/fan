@@ -13,7 +13,7 @@ export class Map {
 	constructor(height, width, seedConfig = [], postHandler = (agentList) => {return agentList}) {
 		this.height = height
 		this.width = width
-		this.storage = new Matrix(height, width, Array)
+		this.storage = this.createStorage(height, width)//new Matrix(height, width, Array)
 		if (seedConfig.length > 0) {
 			this.seed(seedConfig)
 		}
@@ -21,23 +21,11 @@ export class Map {
 	}
 
 	evaluate() {
-		let nextState = new Matrix(this.height, this.width, Array)
+		let nextState = this.createStorage(this.height, this.width)//new Matrix(this.height, this.width, Array)
 		Map.agentCount = 0
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
-				let agentList = this.storage.get(x, y)
-				if (!(agentList instanceof AgentList)) {
-					agentList = new AgentList(x, y)
-				}
-				nextState.set(x, y, new AgentList(x, y))
-			}
-		}
-		for (let y = 0; y < this.height; y += 1) {
-			for (let x = 0; x < this.width; x += 1) {
-				let agentList = this.storage.get(x, y)
-				if (!agentList || !(agentList instanceof AgentList)) {
-					agentList = new AgentList(x, y)
-				}
+				let agentList = AgentList.loadFromMatrix(this.storage, x, y)//this.storage.get(x, y)
 				Map.agentCount += agentList.getSource().getCharge() !== 0
 				Map.agentCount += agentList.getCorpuscle().getCharge() !== 0
 				Map.agentCount += agentList.getField().getCharge() !== 0
@@ -59,18 +47,15 @@ export class Map {
 	}
 
 	static addAgentToStorage(agent, storage) {
-		let agentList = storage.get(agent.x, agent.y)
-		if (!(agentList instanceof AgentList)) {
-			agentList = new AgentList(agent.x, agent.y)
-		}
+		let agentList = AgentList.loadFromMatrix(storage, agent.x, agent.y)
 		agentList.push(agent)
-		storage.set(agent.x, agent.y, agentList)
+		agentList.saveToMatrix(storage)
 	}
 
 	seed(config) {
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				this.storage.set(new AgentList(x, y))
+				(new AgentList(x, y)).saveToMatrix(this.storage)
 				config.forEach((configElement) => {
 					if ((configElement.condition)(x, y, this.storage)) {
 						this.addAgent(new (configElement.agentType)(x, y, (configElement.agentData)(x, y)))
@@ -84,14 +69,16 @@ export class Map {
 		let snapshot = ImagePixels.create(this.height, this.width)
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				let agentList = this.storage.get(x, y)
-				if (!agentList || !(agentList instanceof AgentList)) {
-					agentList = new AgentList(x, y)
-				}
+				let agentList = AgentList.loadFromMatrix(this.storage, x, y)
 				snapshot.setPixelColor(x, y, (converter)(agentList))
 			}
 		}
 		snapshot.fillImageData()
 		return snapshot
+	}
+
+	createStorage(height, width) {
+		return new Matrix(height, width, Array)
+		// return new M2(height, width)
 	}
 }

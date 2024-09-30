@@ -154,10 +154,7 @@ export class Corpuscle extends Charge
 		//return vector
 		for (let x = this.x - radius; x <= this.x + radius; x += 1) {
 			for (let y = this.y - radius; y <= this.y + radius; y += 1) {
-				let agentList = currentState.get(x, y)
-				if (!(agentList instanceof AgentList)) {
-					agentList = new AgentList(x, y)
-				}
+				let agentList = AgentList.loadFromMatrix(currentState, x, y)
 				const field = Charge.getFieldFromAgentList(agentList)
 				const energy = field.getEnergy() + (2 * Math.random() - 1)
 				const charge = field.getCharge()
@@ -209,7 +206,8 @@ export class Field extends Charge
 		}
 		for (let x = center.x - pe; x <= center.x + pe; x += 1) {
 			for (let y = center.y - pe; y <= center.y + pe; y += 1) {
-				let field = nextState.get(x,y).getField()
+				let agentList = AgentList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
+				let field = agentList.getField()//nextState.get(x,y).getField()
 				if (field.getCharge() === 0) {
 					field.agentData.energy += dE * charge
 					field.setCharge(Math.sign(field.agentData.energy))
@@ -222,6 +220,7 @@ export class Field extends Charge
 				if (field.agentData.energy > (maxEnergy)) {
 					Map.maxEnergy = field.agentData.energy
 				}
+				agentList.saveToMatrix(nextState)
 			}
 		}
 	}
@@ -318,5 +317,23 @@ export class AgentList
 	setField(field) {
 		this.#field = field
 		return this
+	}
+
+	saveToMatrix(matrix) {
+		if (
+			this.getSource().getCharge() !== 0 ||
+			this.getCorpuscle().getCharge() !== 0 ||
+			this.getField().getCharge() !== 0
+		) {
+			matrix.set(this.getX(), this.getY(), this)
+		}
+	}
+
+	static loadFromMatrix(matrix, x, y) {
+		let agentList = matrix.get(x, y)
+		if (!(agentList instanceof AgentList)) {
+			agentList = new AgentList(x, y)
+		}
+		return agentList
 	}
 }
