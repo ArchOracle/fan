@@ -24,7 +24,7 @@ function run() {
 			[
 				{
 					'condition': (x, y, currentState) => {
-						return (x === 50 && y === 30) || (x === 50 && y === 70)
+						return x % Math.ceil(Math.random() * 20 + 10) === 5 && y % Math.ceil(Math.random() * 20 + 10) === 5
 					},
 					'agentType': Source,
 					'agentData': (x, y) => {return {
@@ -32,7 +32,7 @@ function run() {
 						y: y,
 						dx: 0,
 						dy: 0,
-						charge: (x === 50 && y === 30) ? +1 : -1
+						charge: Math.random() > 0.5 ? +1 : -1
 					}}
 				}
 			],
@@ -47,6 +47,7 @@ function run() {
 			document.querySelector('#currentCalculateCount').innerText = params.currentCalculateCount
 			document.querySelector('#currentDrawCount').innerText = params.currentDrawCount
 			document.querySelector('#agentCount').innerText = Map.agentCount
+			document.querySelector('#maxEnergy').innerText = (Map.maxEnergy)
 		},
 		htmlFinishElement: document.querySelector('#isDone'),
 		maxExecutionTime: document.querySelector('[name=max_execution_time]').value

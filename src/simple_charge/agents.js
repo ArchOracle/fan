@@ -36,13 +36,13 @@ export class Charge extends Agent
 {
 	constructor(x, y, agentData) {
 		super(x, y, agentData);
-		if (!this.agentData.charge && this.agentData.charge !== 0) {
+		if (typeof this.agentData.charge !== 'number') {
 			throw new Error('У источника, частицы или поля обязан быть заряд!')
 		}
 	}
 
 	getCharge() {
-		if (!this.agentData.charge && this.agentData.charge !== 0) {
+		if (typeof this.agentData.charge !== 'number') {
 			throw new Error('У источника, частицы или поля обязан быть заряд!')
 		}
 		return this.agentData.charge
@@ -53,58 +53,7 @@ export class Charge extends Agent
 	}
 
 	static postHandler(agentList) {
-		if (
-			!agentList || !Array.isArray(agentList) || agentList.length === 0
-			|| !(agentList[0].x > 2 && agentList[0].x < 99 && agentList[0].y > 2 && agentList[0].y < 99)
-		) {
-			return undefined
-		} else {
-			let corpuscleCharge = 0
-			let agentX = 0
-			let agentY = 0
-			let fieldEnergy = 0
-			let isNeedSource = false
-			let chargeSource = false
-			let isNeedCorpuscle = false
-			let isNeedField = false
-			agentList.forEach((agent) => {
-				agentX = agent.x
-				agentY = agent.y
-				if (agent instanceof Source) {
-					isNeedSource = true
-					chargeSource = agent.agentData.charge
-				}
-				if (agent instanceof Corpuscle) {
-					corpuscleCharge += agent.agentData.count * agent.agentData.charge
-					isNeedCorpuscle = true
-				}
-				if (agent instanceof Field) {
-					isNeedField = true
-					fieldEnergy += agent.agentData.energy * agent.agentData.charge
-				}
-			})
-			agentList = []
-			if (isNeedSource) {
-				agentList[0] = new Source(agentX, agentY, {x: agentX, y: agentY, charge: chargeSource})
-			}
-			if (isNeedCorpuscle) {
-				agentList[1] = new Corpuscle(agentX, agentY, {
-					x: agentX,
-					y: agentY,
-					count: Math.abs(corpuscleCharge),
-					charge: Math.sign(corpuscleCharge)
-				})
-			}
-			if (isNeedField) {
-				agentList[2] = new Field(agentX, agentY, {
-					x: agentX,
-					y: agentY,
-					energy: Math.abs(fieldEnergy),
-					charge: Math.sign(fieldEnergy)
-				})
-			}
-			return agentList
-		}
+		return agentList
 	}
 
 	static converter(agentList) {
@@ -114,56 +63,35 @@ export class Charge extends Agent
 			blue: 0,
 			alpha: 255,
 		}
-		if (Array.isArray(agentList)) {
-			const corpuscle = Charge.getCorpuscleFromAgentList(agentList)
-			const field = Charge.getFieldFromAgentList(agentList)
-			if (!!corpuscle) {
-				if (corpuscle.getCharge() > 0) {
-					pixel.red = 255
-				} else if (corpuscle.getCharge() < 0) {
-					pixel.green = 255
+		const corpuscle = agentList.getCorpuscle() instanceof Corpuscle && agentList.getCorpuscle().getCharge() !== 0
+		const field = agentList.getField() instanceof Field && agentList.getField().getCharge() !== 0
+		if (corpuscle) {
+			if (agentList.getCorpuscle().getCharge() > 0) {
+				pixel.red = 255
+			} else if (agentList.getCorpuscle().getCharge() < 0) {
+				pixel.green = 255
+			}
+		}
+		if (!!field) {
+			if (!corpuscle) {
+				pixel.blue = Math.min(Math.floor(Math.abs(agentList.getField().agentData.energy) * 100), 100)
+				if (agentList.getField().getCharge() > 0) {
+					pixel.red = pixel.blue
 				} else {
-					pixel.red = 255
-					pixel.green = 255
-					pixel.blue = 255
+					pixel.green = pixel.blue
 				}
 			}
-			if (!!field) {
-				if (!corpuscle) {
-					pixel.blue = Math.min(Math.floor(field.agentData.energy * 20), 100)
-					if (field.getCharge() > 0) {
-						pixel.red = pixel.blue
-					} else {
-						pixel.green = pixel.blue
-					}
-				}
-			}
+		}
+		if (agentList.getSource() instanceof Source && agentList.getSource().getCharge() !== 0) {
+			pixel.red = 155
+			pixel.green = 155
+			pixel.blue = 155
 		}
 		return pixel
 	}
 
-	static getSourceFromAgentList(agentList) {
-		if (Array.isArray(agentList)) {
-			return agentList[0]
-		} else {
-			return undefined
-		}
-	}
-
-	static getCorpuscleFromAgentList(agentList) {
-		if (Array.isArray(agentList)) {
-			return agentList[1]
-		} else {
-			return undefined
-		}
-	}
-
 	static getFieldFromAgentList(agentList) {
-		if (Array.isArray(agentList)) {
-			return agentList[2]
-		} else {
-			return undefined
-		}
+		return agentList.getField()
 	}
 }
 
@@ -171,11 +99,13 @@ export class Source extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
-		const sd = Math.floor(Math.random() * 8)
-		const d = (sd >= 4 ? sd + 1 : sd) - 4
-		const dx = d % 3
-		const dy = (d / 3) | 0
+		const px = Math.random()
+		const dx = px < 0.34 ? -1 : (px > 0.67 ? 1 : 0)
+		const py = Math.random()
+		const dy = py < 0.34 ? -1 : (py > 0.67 ? 1 : 0)
+
 		Map.addAgentToStorage(this, nextState)
+
 		Map.addAgentToStorage(new Corpuscle(this.x + dx, this.y + dy, {
 			count: 1,
 			x: this.x + dx,
@@ -190,39 +120,57 @@ export class Corpuscle extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
-		for (let i = 0; i < this.agentData.count; i += 1) {
-			let vector = this.getVectorMinimalField(currentState)
-			Map.addAgentToStorage(new Corpuscle(this.x + vector.dx, this.y + vector.dy, {
-				count: 1,
-				x: this.x + vector.dx,
-				y: this.y + vector.dy,
-				charge: this.getCharge()
-			}), nextState)
-		}
+		let vector = this.getVectorMinimalField(currentState)
+		this.x += vector.dx
+		this.y += vector.dy
+		this.agentData.x += vector.dx
+		this.agentData.y += vector.dy
+		Map.addAgentToStorage(this, nextState)
+		// Map.addAgentToStorage(new Corpuscle(
+		// 	this.x + 1,//vector.dx,
+		// 	this.y + 2,//vector.dy,
+		// 	{
+		// 	count: this.agentData.count,
+		// 	x: this.x + 1,//vector.dx,
+		// 	y: this.y + 2,//vector.dy,
+		// 	charge: this.getCharge()
+		// }), nextState)
 		Field.fillArea({x: this.x, y: this.y}, 1, this.getCharge(), currentState, nextState)
 	}
 
 	getVectorMinimalField(currentState) {
-		let vector = {energy: 1000000, x: 0, y: 0}
-		for (let x = this.x - 5; x <= this.x + 5; x += 1) {
-			for (let y = this.y - 5; y <= this.y + 5; y += 1) {
+		const radius = 3
+		let vector = {
+			energy: 1000000, x: 50, y: 50,
+			dx: 0, dy: 0,
+			charge: this.getCharge()
+		}
+		if (this.x - radius < 0 || this.x + radius > 99) {
+			return vector
+		}
+		if (this.y - radius < 0 || this.y + radius > 99) {
+			return vector
+		}
+		//return vector
+		for (let x = this.x - radius; x <= this.x + radius; x += 1) {
+			for (let y = this.y - radius; y <= this.y + radius; y += 1) {
 				let agentList = currentState.get(x, y)
-				if (!Array.isArray(agentList)) {
-					continue
+				if (!(agentList instanceof AgentList)) {
+					agentList = new AgentList(x, y)
 				}
 				const field = Charge.getFieldFromAgentList(agentList)
-				if (!field) {
-					continue
-				}
-				const energy = field.agentData.energy * (1 + Math.random() * 0.5)
+				const energy = field.getEnergy() + (2 * Math.random() - 1)
+				const charge = field.getCharge()
 				if (
-						(vector.energy > energy && field.getCharge() === this.getCharge())
-						|| (field.getCharge() !== this.getCharge())
+					// vector.energy * vector.charge > field.getCharge() * energy
+					vector.energy > energy
+					|| (vector.charge !== charge)
 				) {
 					vector = {
-						energy: energy,
+						energy: energy, x: x, y: y,
 						dx: x - this.x,
-						dy: y - this.y
+						dy: y - this.y,
+						charge: charge
 					}
 				}
 			}
@@ -237,32 +185,138 @@ export class Field extends Charge
 {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
-		//Field.fillArea({x: this.x, y: this.y}, this.agentData.energy, this.agentData.charge, currentState, nextState)
+		Field.fillArea({x: this.x, y: this.y}, this.agentData.energy, this.agentData.charge, currentState, nextState)
+	}
+
+	getEnergy() {
+		return this.agentData.energy
 	}
 
 	static fillArea(center, currentEnergy, charge, currentState, nextState) {
-		const dE = 1 * currentEnergy / 121
-		for (let x = center.x - 5; x <= center.x + 5; x += 1) {
-			for (let y = center.y - 5; y <= center.y + 5; y += 1) {
-				if (Charge.getFieldFromAgentList(nextState.get(x,y))) {
-					let field = Charge.getFieldFromAgentList(nextState.get(x, y))
-					field.energy += dE * charge
-					field.charge = field.energy > 0 ? +1 : (field.energy < 0 ? -1 : 0)
-				} else {
-					if (!Charge.getFieldFromAgentList(currentState.get(x,y))) {
-						Map.addAgentToStorage(new Field(x, y, {
-							energy: dE,
-							charge: charge
-						}), nextState)
-					} else {
-						let field = Charge.getFieldFromAgentList(currentState.get(x, y))
-						field.energy += dE * charge
-						field.charge = field.energy > 0 ? +1 : (field.energy < 0 ? -1 : 0)
-						Map.addAgentToStorage(field, nextState)
-					}
+		const pe = 7
+		const dE = 1 * currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
+		if (center.x - pe < 0 || center.x + pe > 99) {
+			//console.log(center.x)
+			return
+		}
+		if (center.y - pe < 0 || center.y + pe > 99) {
+			//console.log(center.y)
+			return
+		}
 
+		if (charge === 0) {
+			return;
+		}
+		for (let x = center.x - pe; x <= center.x + pe; x += 1) {
+			for (let y = center.y - pe; y <= center.y + pe; y += 1) {
+				let field = nextState.get(x,y).getField()
+				if (field.getCharge() === 0) {
+					field.agentData.energy += dE * charge
+					field.setCharge(Math.sign(field.agentData.energy))
+				} else {
+					field.agentData.energy += dE * ((field.getCharge() * charge) > 0 ? 1 : -1)
+					field.setCharge(Math.sign(field.agentData.energy) * field.getCharge())
+				}
+				field.agentData.energy = Math.abs(field.agentData.energy)
+				let maxEnergy = Map.maxEnergy
+				if (field.agentData.energy > (maxEnergy)) {
+					Map.maxEnergy = field.agentData.energy
 				}
 			}
 		}
+	}
+}
+
+export class AgentList
+{
+	#x
+	#y
+	#source
+	#corpuscle
+	#field
+
+	constructor(x, y) {
+		this.#x = x
+		this.#y = y
+		this.#source = new Source(x, y, {
+			charge: 0,
+			count: 0,
+			x: this.#x,
+			y: this.#y
+		})
+		this.#corpuscle = new Corpuscle(x, y, {
+			charge: 0,
+			count: 0,
+			x: this.#x,
+			y: this.#y
+		})
+		this.#field = new Field(x, y, {
+			charge: 0,
+			energy: 0,
+			x: this.#x,
+			y: this.#y
+		})
+	}
+
+	evaluate(storage, state) {
+		if (this.getSource().getCharge() !== 0) {
+			this.getSource().evaluate(storage, state)
+		}
+		if (this.getCorpuscle().getCharge() !== 0) {
+			this.getCorpuscle().evaluate(storage, state)
+		}
+		if (this.getField().getCharge() !== 0) {
+			this.getField().evaluate(storage, state)
+		}
+	}
+
+	push(agent) {
+		if (agent instanceof Source) {
+			this.getSource().setCharge(this.getSource().getCharge() + agent.getCharge())
+			this.getSource().agentData.count = this.getSource().agentData.count + agent.agentData.count
+		}
+		if (agent instanceof Corpuscle) {
+			const otherCharge =  agent.getCharge()
+			const otherCount =  agent.agentData.count
+
+			let newCount = this.getCorpuscle().getCharge() * this.getCorpuscle().agentData.count + otherCharge * otherCount
+
+			this.getCorpuscle().setCharge(Math.sign(newCount))
+			this.getCorpuscle().agentData.count = Math.abs(newCount)
+		}
+		if (agent instanceof Field) {
+			this.getField().setCharge(this.getField().getCharge() + agent.getCharge())
+		}
+	}
+
+	getX() {
+		return this.#x
+	}
+
+	getY() {
+		return this.#y
+	}
+
+	getSource() {
+		return this.#source
+	}
+	getCorpuscle() {
+		return this.#corpuscle
+	}
+	getField() {
+		return this.#field
+	}
+
+	setSource(source) {
+		this.#source = source
+		return this
+	}
+	setCorpuscle(corpuscle) {
+		this.#corpuscle = corpuscle
+		return this
+	}
+	setField(field) {
+		this.#field = field
+		return this
 	}
 }

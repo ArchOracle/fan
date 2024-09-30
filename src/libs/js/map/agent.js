@@ -15,4 +15,22 @@ export class Agent {
 			throw new Error('Состояния должны быть матрицами!')
 		}
 	}
+
+	getX() {
+		return this.x
+	}
+
+	setX(x) {
+		this.x = x
+		return this
+	}
+
+	getY() {
+		return this.y
+	}
+
+	setY(y) {
+		this.y = y
+		return this
+	}
 }
