@@ -18,6 +18,15 @@ export class Render {
 	converter
 	snapshotList = []
 
+	isRun = false
+
+	renderId
+
+	stream
+	recorder
+
+	frames = []
+
 	static create(config) {
 		return new Render(config)
 	}
@@ -36,54 +45,86 @@ export class Render {
 	}
 
 	run() {
-		setTimeout(() => {
-			this.calculateSnapshotList()
-		}, 0)
-		setTimeout(() => {
-			this.drawSnapshotList()
-		}, 10)
+		this.isRun = true
+		document.getElementById('load').style.display = 'none'
+		this.stream = this.canvas.captureStream()
+		this.recorder = new MediaRecorder(this.stream, {
+			// mimeType: "video/mp4",
+			bitsPerSecond: 25,
+
+		})
+		this.startVideoFile()
+		this.recorder.start()
+		window.requestAnimationFrame(Render.runFrameDecorator(this));
 		this.maxExecutionTimer = setTimeout(() => {
 			this.stopRender('Время вышло!')
 			this.stopCalculate()
 		}, this.maxExecutionTime * 1000)
+
+	}
+
+	runFrame() {
+		if (this.isRun) {
+			this.calculateSnapshotList()
+			this.drawSnapshotList()
+			this.renderId = window.requestAnimationFrame(Render.runFrameDecorator(this));
+		}
+	}
+
+	static runFrameDecorator(render) {
+		return render.runFrame.bind(render)
 	}
 
 	calculateSnapshotList() {
-		this.calculateIntervalId = setInterval(() => {
-			this.snapshotList.push(this.map.getSnapshot(this.converter))
-			this.currentCalculateCount += 1;
-			(this.htmlEditor)({
-				currentCalculateCount: this.currentCalculateCount,
-				currentDrawCount: this.currentDrawCount,
-			})
-			this.map.evaluate()
-			if (this.currentCalculateCount >= this.needFrameCount) {
-				this.stopCalculate()
-			}
-		}, 1)
+		this.snapshotList.push(this.map.getSnapshot(this.converter))
+		this.currentCalculateCount += 1;
+		(this.htmlEditor)({
+			currentCalculateCount: this.currentCalculateCount,
+			currentDrawCount: this.currentDrawCount,
+		})
+		this.map.evaluate()
+		if (this.currentCalculateCount >= this.needFrameCount) {
+			this.stopCalculate()
+		}
 	}
 
 	drawSnapshotList() {
-		this.drawIntervalId = setInterval(() => {
-			const currentSnapshot = this.snapshotList[this.currentDrawCount]
-			this.context.putImageData(currentSnapshot.increaseSize(this.timesCanvasToMap).imageData, 0, 0)
-			this.currentDrawCount += 1;
-			(this.htmlEditor)({
-				currentCalculateCount: this.currentCalculateCount,
-				currentDrawCount: this.currentDrawCount,
-			})
-			if (this.currentDrawCount >= this.snapshotList.length) {
-				this.stopRender('Рендер завершён!')
-			}
-		}, (1000 / this.fps))
+		const currentSnapshot = this.snapshotList[this.currentDrawCount]
+		this.context.putImageData(currentSnapshot.increaseSize(this.timesCanvasToMap).imageData, 0, 0)
+		this.currentDrawCount += 1;
+		(this.htmlEditor)({
+			currentCalculateCount: this.currentCalculateCount,
+			currentDrawCount: this.currentDrawCount,
+		})
+		if (this.currentDrawCount >= this.needFrameCount) {
+			this.stopRender('Рендер завершён!')
+		}
 	}
 
 	stopRender(reason) {
-		clearInterval(this.drawIntervalId)
+		this.isRun = false
 		clearTimeout(this.maxExecutionTimer)
 		this.htmlFinishElement.innerText = reason
+		window.cancelAnimationFrame(this.renderId)
+		this.recorder.stop()
 	}
 	stopCalculate() {
-		clearInterval(this.calculateIntervalId)
+		this.isRun = false
+	}
+
+	startVideoFile() {
+		//this.recorder.requestData()
+		this.recorder.addEventListener('dataavailable', (event) => {
+			let data = event.data
+			let reader = new FileReader()
+			// reader.readAsDataURL(data)
+			reader.addEventListener('load', () => {
+				document.getElementById('load').href = reader.result
+				document.getElementById('load').style.display = ''
+			})
+			// this.frames.push(data)
+			reader.readAsDataURL(data)
+			// document.getElementById('load').href = URL.createObjectURL(data)
+		})
 	}
 }

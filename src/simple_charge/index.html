@@ -15,7 +15,7 @@
 	<div>
 		<label>
 			Отрендерить кадров:
-			<input type="number" name="frames_count" value="50">
+			<input type="number" name="frames_count" value="10">
 		</label>
 	</div>
 	<div>
@@ -35,10 +35,14 @@
 		Существует агентов: <span id="agentCount"></span>
 		<br>
 		Максимум энергии: <span id="maxEnergy">0</span>
+		<br>
+		<div id="video">
+			<a href="" id="load" target="_blank" download="video" style="display: none">Скачать видео!</a>
+		</div>
 	</div>
 	<div id="isDone"></div>
 </div>
 <br>
-<canvas id="charge" height="600" width="600"></canvas>
+<canvas id="charge" height="600" width="600" style="display: none"></canvas>
 </body>
 </html>
