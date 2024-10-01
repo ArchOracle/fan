@@ -74,8 +74,8 @@ export class Charge extends Agent {
 		}
 		if (!!field) {
 			if (!corpuscle) {
-				pixel.blue = Math.min(Math.floor(Math.abs(agentList.getField().agentData.energy) * 100), 100)
-				if (agentList.getField().getCharge() > 0) {
+				pixel.blue = Math.min(Math.floor(agentList.getField().agentData.energy * 100), 100)
+				if (agentList.getFieldCharge() > 0) {
 					pixel.red = pixel.blue
 				} else {
 					pixel.green = pixel.blue
@@ -212,7 +212,7 @@ export class Corpuscle extends Charge {
 		for (let x = this.x - radius; x <= this.x + radius; x += 1) {
 			for (let y = this.y - radius; y <= this.y + radius; y += 1) {
 				let agentList = AgentList.loadFromMatrix(currentState, x, y)
-				const field = Charge.getFieldFromAgentList(agentList)
+				const field = agentList.getField()
 				const energy = field.getEnergy() + (2 * Math.random() - 1)
 				const charge = field.getCharge()
 				if (
@@ -265,31 +265,33 @@ export class Field extends Charge {
 			for (let y = center.y - pe; y <= center.y + pe; y += 1) {
 				let agentList = AgentList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
 				let field = agentList.getField()//nextState.get(x,y).getField()
-				if (field.getCharge() === 0) {
+				if (agentList.getFieldCharge() === 0) {
 					field.agentData.energy += dE * charge
 					field.setCharge(Math.sign(field.agentData.energy))
 				} else {
-					field.agentData.energy += dE * ((field.getCharge() * charge) > 0 ? 1 : -1)
-					field.setCharge(Math.sign(field.agentData.energy) * field.getCharge())
+					field.agentData.energy += dE * ((agentList.getFieldCharge() * charge) > 0 ? 1 : -1)
+					field.setCharge(Math.sign(field.agentData.energy) * agentList.getFieldCharge())
 				}
 				field.agentData.energy = Math.abs(field.agentData.energy)
 				let maxEnergy = Map.maxEnergy
 				if (field.agentData.energy > (maxEnergy)) {
 					Map.maxEnergy = field.agentData.energy
 				}
+				agentList.saveField()
 				agentList.saveToMatrix(nextState)
 			}
 		}
 	}
 }
 
-export class AgentList
-{
+export class AgentList {
 	#x
 	#y
 	#source
 	#corpuscle
 	#field
+	#fieldCharge = 0
+	#fieldEnergy = 0
 
 	constructor(x, y) {
 		this.#x = x
@@ -321,7 +323,7 @@ export class AgentList
 		if (this.getCorpuscle().getCharge() !== 0) {
 			this.getCorpuscle().evaluate(storage, state)
 		}
-		if (this.getField().getCharge() !== 0) {
+		if (this.getFieldCharge() !== 0) {
 			this.getField().evaluate(storage, state)
 		}
 	}
@@ -332,8 +334,8 @@ export class AgentList
 			this.getSource().agentData.count = this.getSource().agentData.count + agent.agentData.count
 		}
 		if (agent instanceof Corpuscle) {
-			const otherCharge =  agent.getCharge()
-			const otherCount =  agent.agentData.count
+			const otherCharge = agent.getCharge()
+			const otherCount = agent.agentData.count
 
 			let newCount = this.getCorpuscle().getCharge() * this.getCorpuscle().agentData.count + otherCharge * otherCount
 
@@ -341,7 +343,9 @@ export class AgentList
 			this.getCorpuscle().agentData.count = Math.abs(newCount)
 		}
 		if (agent instanceof Field) {
-			this.getField().setCharge(this.getField().getCharge() + agent.getCharge())
+			const charge = this.getFieldCharge() + agent.getCharge()
+			this.getField().setCharge(charge)
+			this.#fieldCharge = charge
 		}
 	}
 
@@ -356,31 +360,50 @@ export class AgentList
 	getSource() {
 		return this.#source
 	}
+
 	getCorpuscle() {
 		return this.#corpuscle
 	}
+
 	getField() {
 		return this.#field
+	}
+
+	getFieldCharge() {
+		return this.#fieldCharge
+	}
+
+	getFieldEnergy() {
+		return this.#fieldEnergy
 	}
 
 	setSource(source) {
 		this.#source = source
 		return this
 	}
+
 	setCorpuscle(corpuscle) {
 		this.#corpuscle = corpuscle
 		return this
 	}
+
 	setField(field) {
 		this.#field = field
+		this.#fieldCharge = field.getCharge()
+		this.#fieldEnergy = field.agentData.energy
 		return this
+	}
+
+	saveField() {
+		this.#fieldCharge = this.#field.getCharge()
+		this.#fieldEnergy = this.#field.agentData.energy
 	}
 
 	saveToMatrix(matrix) {
 		if (
 			this.getSource().getCharge() !== 0 ||
 			this.getCorpuscle().getCharge() !== 0 ||
-			this.getField().getCharge() !== 0
+			this.getFieldCharge() !== 0
 		) {
 			matrix.set(this.getX(), this.getY(), this)
 		}

@@ -28,7 +28,7 @@ export class Map {
 				let agentList = AgentList.loadFromMatrix(this.storage, x, y)//this.storage.get(x, y)
 				Map.agentCount += agentList.getSource().getCharge() !== 0
 				Map.agentCount += agentList.getCorpuscle().getCharge() !== 0
-				Map.agentCount += agentList.getField().getCharge() !== 0
+				Map.agentCount += agentList.getFieldCharge() !== 0
 				agentList.evaluate(this.storage, nextState)
 			}
 		}
