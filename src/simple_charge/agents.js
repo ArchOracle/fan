@@ -66,10 +66,12 @@ export class Charge extends Agent {
 		const corpuscle = agentList.getCorpuscle() instanceof Corpuscle && agentList.getCorpuscle().getCharge() !== 0
 		const field = agentList.getField() instanceof Field && agentList.getField().getCharge() !== 0
 		if (corpuscle) {
-			if (agentList.getCorpuscle().getCharge() > 0) {
-				pixel.red = 255
-			} else if (agentList.getCorpuscle().getCharge() < 0) {
-				pixel.green = 255
+			const charge = agentList.getCorpuscle().getCharge()
+			pixel.red = 255 * charge
+			pixel.green = -255 * charge
+
+			if (agentList.getCorpuscle().agentData.count > 1) {
+				pixel.blue = 255
 			}
 		}
 		if (!!field) {
@@ -121,10 +123,10 @@ export class Corpuscle extends Charge {
 		let vector = this.getVectorMinimalField(currentState)
 		if (this.isNeedEvaluate(currentState)) {
 			if (this.agentData.count < 2) {
-				this.x += vector.dx
-				this.y += vector.dy
 				this.agentData.x += vector.dx
 				this.agentData.y += vector.dy
+				this.x = Math.ceil(this.agentData.x)
+				this.y = Math.ceil(this.agentData.y)
 				Map.addAgentToStorage(this, nextState)
 				Field.fillArea({x: this.x, y: this.y}, 1, this.getCharge(), currentState, nextState)
 			} else {
@@ -182,7 +184,7 @@ export class Corpuscle extends Charge {
 	getVectorMinimalField(currentState) {
 		const radius = 17
 		let vector = {
-			energy: 1000000, x: 50, y: 50,
+			energy: 1000000,
 			dx: 0, dy: 0,
 			charge: this.getCharge()
 		}
@@ -214,7 +216,7 @@ export class Corpuscle extends Charge {
 				let agentList = AgentList.loadFromMatrix(currentState, x, y)
 				const field = agentList.getField()
 				const energy = field.getEnergy() + (2 * Math.random() - 1)
-				const charge = field.getCharge()
+				const charge = agentList.getFieldCharge()
 				if (
 					// vector.energy * vector.charge > field.getCharge() * energy
 					vector.energy > energy
@@ -222,7 +224,7 @@ export class Corpuscle extends Charge {
 					|| this.getCharge() * charge === -1
 				) {
 					vector = {
-						energy: energy, x: x, y: y,
+						energy: energy,
 						dx: x - this.x,
 						dy: y - this.y,
 						charge: charge
@@ -248,7 +250,6 @@ export class Field extends Charge {
 
 	static fillArea(center, currentEnergy, charge, currentState, nextState) {
 		const pe = 3//Math.ceil(1 + 15 * Math.random())
-		const dE = 2 * currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
 		if (center.x - pe < 0 || center.x + pe > 198) {
 			//console.log(center.x)
 			return
@@ -261,20 +262,17 @@ export class Field extends Charge {
 		if (charge === 0) {
 			return;
 		}
+		const dE = 2 * currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
 		for (let x = center.x - pe; x <= center.x + pe; x += 1) {
 			for (let y = center.y - pe; y <= center.y + pe; y += 1) {
 				let agentList = AgentList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
 				let field = agentList.getField()//nextState.get(x,y).getField()
-				if (agentList.getFieldCharge() === 0) {
-					field.agentData.energy += dE * charge
-					field.setCharge(Math.sign(field.agentData.energy))
-				} else {
-					field.agentData.energy += dE * ((agentList.getFieldCharge() * charge) > 0 ? 1 : -1)
-					field.setCharge(Math.sign(field.agentData.energy) * agentList.getFieldCharge())
-				}
-				field.agentData.energy = Math.abs(field.agentData.energy)
-				let maxEnergy = Map.maxEnergy
-				if (field.agentData.energy > (maxEnergy)) {
+				const localCharge = agentList.getFieldCharge()
+				let energy = field.agentData.energy * localCharge
+				energy += dE * charge
+				field.setCharge(Math.sign(energy))
+				field.agentData.energy = Math.abs(energy)
+				if (field.agentData.energy > Map.maxEnergy) {
 					Map.maxEnergy = field.agentData.energy
 				}
 				agentList.saveField()
