@@ -121,11 +121,47 @@ export class Corpuscle extends Charge
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
 		let vector = this.getVectorMinimalField(currentState)
-		this.x += vector.dx
-		this.y += vector.dy
-		this.agentData.x += vector.dx
-		this.agentData.y += vector.dy
-		Map.addAgentToStorage(this, nextState)
+		if (this.isNeedEvaluate(currentState)) {
+			if (this.agentData.count < 2) {
+				this.x += vector.dx
+				this.y += vector.dy
+				this.agentData.x += vector.dx
+				this.agentData.y += vector.dy
+				Map.addAgentToStorage(this, nextState)
+				Field.fillArea({x: this.x, y: this.y}, 1, this.getCharge(), currentState, nextState)
+			} else {
+				let c1 = new Corpuscle(
+					this.x + vector.dx,
+					this.y,
+					{
+						x: this.x + vector.dx,
+						y: this.y,
+						count: this.agentData.count / 2,
+						charge: this.getCharge()
+					}
+				)
+				Map.addAgentToStorage(c1, nextState)
+				Field.fillArea({
+					x: c1.getX(),
+					y: c1.getY()
+				}, c1.agentData.count, c1.getCharge(), currentState, nextState)
+				let c2 = new Corpuscle(
+					this.x,
+					this.y + vector.dy,
+					{
+						x: this.x,
+						y: this.y + vector.dy,
+						count: this.agentData.count / 2,
+						charge: this.getCharge()
+					}
+				)
+				Map.addAgentToStorage(c2, nextState)
+				Field.fillArea({
+					x: c2.getX(),
+					y: c2.getY()
+				}, c2.agentData.count, c2.getCharge(), currentState, nextState)
+			}
+		}
 		// Map.addAgentToStorage(new Corpuscle(
 		// 	this.x + 1,//vector.dx,
 		// 	this.y + 2,//vector.dy,
@@ -135,7 +171,14 @@ export class Corpuscle extends Charge
 		// 	y: this.y + 2,//vector.dy,
 		// 	charge: this.getCharge()
 		// }), nextState)
-		Field.fillArea({x: this.x, y: this.y}, 1, this.getCharge(), currentState, nextState)
+	}
+
+	isNeedEvaluate(state) {
+		return (this.getX() > 3) &&
+			(this.getY() > 3) &&
+			(this.getX() < 197) &&
+			(this.getY() < 197)
+			// AgentList.loadFromMatrix(state).getField()
 	}
 
 	getVectorMinimalField(currentState) {
