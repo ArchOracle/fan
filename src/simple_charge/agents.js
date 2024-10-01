@@ -2,10 +2,11 @@ import {Matrix} from "../libs/js/matrix/matrix";
 import {Map} from "../libs/js/map/map";
 import {Agent} from "../libs/js/map/agent";
 
-export class SimpleAgent extends Agent{
+export class SimpleAgent extends Agent {
 	constructor(x, y, agentData) {
 		super(x, y, agentData);
 	}
+
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState)
 		const ox = currentState.width / 2
@@ -32,8 +33,7 @@ export class SimpleAgent extends Agent{
 	}
 }
 
-export class Charge extends Agent
-{
+export class Charge extends Agent {
 	constructor(x, y, agentData) {
 		super(x, y, agentData);
 		if (typeof this.agentData.charge !== 'number') {
@@ -95,8 +95,7 @@ export class Charge extends Agent
 	}
 }
 
-export class Source extends Charge
-{
+export class Source extends Charge {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
 		const px = Math.random()
@@ -116,8 +115,7 @@ export class Source extends Charge
 	}
 }
 
-export class Corpuscle extends Charge
-{
+export class Corpuscle extends Charge {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
 		let vector = this.getVectorMinimalField(currentState)
@@ -182,7 +180,7 @@ export class Corpuscle extends Charge
 	}
 
 	getVectorMinimalField(currentState) {
-		const radius = 3
+		const radius = 17
 		let vector = {
 			energy: 1000000, x: 50, y: 50,
 			dx: 0, dy: 0,
@@ -220,7 +218,8 @@ export class Corpuscle extends Charge
 				if (
 					// vector.energy * vector.charge > field.getCharge() * energy
 					vector.energy > energy
-					|| (vector.charge !== charge)
+					// || (vector.charge !== charge)
+					|| this.getCharge() * charge === -1
 				) {
 					vector = {
 						energy: energy, x: x, y: y,
@@ -237,11 +236,10 @@ export class Corpuscle extends Charge
 	}
 }
 
-export class Field extends Charge
-{
+export class Field extends Charge {
 	evaluate(currentState, nextState) {
 		super.evaluate(currentState, nextState);
-		Field.fillArea({x: this.x, y: this.y}, this.agentData.energy, this.agentData.charge, currentState, nextState)
+		Field.fillArea({x: this.x, y: this.y}, this.agentData.energy / 2, this.agentData.charge, currentState, nextState)
 	}
 
 	getEnergy() {
