@@ -24,6 +24,9 @@ export class Render {
 
 	stream
 	recorder
+	timerId
+	prevFrameCount = 0
+	time = 0
 
 	frames = []
 
@@ -47,7 +50,7 @@ export class Render {
 	run() {
 		this.isRun = true
 		document.getElementById('load').style.display = 'none'
-		this.stream = this.canvas.captureStream()
+		this.stream = this.canvas.captureStream(25)
 		this.recorder = new MediaRecorder(this.stream, {
 			// mimeType: "video/mp4",
 			bitsPerSecond: 25,
@@ -55,6 +58,11 @@ export class Render {
 		})
 		this.startVideoFile()
 		this.recorder.start()
+		this.timerId = setInterval(() => {
+			this.fps = this.currentDrawCount - this.prevFrameCount
+			this.prevFrameCount = this.currentDrawCount
+			this.time += 1
+		}, 1000)
 		window.requestAnimationFrame(Render.runFrameDecorator(this));
 		this.maxExecutionTimer = setTimeout(() => {
 			this.stopRender('Время вышло!')
@@ -95,6 +103,8 @@ export class Render {
 		(this.htmlEditor)({
 			currentCalculateCount: this.currentCalculateCount,
 			currentDrawCount: this.currentDrawCount,
+			fps: this.fps,
+			time: this.time
 		})
 		if (this.currentDrawCount >= this.needFrameCount) {
 			this.stopRender('Рендер завершён!')

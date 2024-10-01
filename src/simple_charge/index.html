@@ -7,21 +7,22 @@
 <body>
 <div>
 	<div>
-		<label>
-			ФПС:
-			<input type="number" name="fps" value="5">
-		</label>
+<!--		<label>-->
+<!--			ФПС:-->
+<!--&lt;!&ndash;			<input id="fps" type="number" name="fps" value="5" disabled>&ndash;&gt;-->
+<!--			<span id="fps" style="font-size: 25px">10</span>-->
+<!--		</label>-->
 	</div>
 	<div>
 		<label>
 			Отрендерить кадров:
-			<input type="number" name="frames_count" value="50">
+			<input type="number" name="frames_count" value="500">
 		</label>
 	</div>
 	<div>
 		<label>
 			Максимум времени на рендер и отрисовку:
-			<input type="number" name="max_execution_time" value="20">
+			<input type="number" name="max_execution_time" value="5">
 		</label>
 	</div>
 	<div>
@@ -44,5 +45,14 @@
 </div>
 <br>
 <canvas id="charge" height="600" width="600"></canvas>
+<div>
+	<label>
+		ФПС:
+		<!--			<input id="fps" type="number" name="fps" value="5" disabled>-->
+		<span id="fps" style="font-size: 25px">10</span>
+	</label>
+	<br>
+	Время: <span id="time">0</span>
+</div>
 </body>
 </html>

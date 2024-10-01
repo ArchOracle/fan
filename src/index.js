@@ -42,7 +42,7 @@ function run() {
 		),
 		canvas: document.querySelector('#charge'),
 		timesCanvasToMap: 3,
-		fps: document.querySelector('[name=fps]').value,
+		fps: 10,//document.querySelector('[name=fps]').value,
 		needFrameCount: document.querySelector('[name=frames_count]').value,
 		converter: Charge.converter,
 		htmlEditor: (params) => {
@@ -50,6 +50,8 @@ function run() {
 			document.querySelector('#currentDrawCount').innerText = params.currentDrawCount
 			document.querySelector('#agentCount').innerText = Map.agentCount
 			document.querySelector('#maxEnergy').innerText = (Map.maxEnergy)
+			document.querySelector('#fps').innerText = params.fps
+			document.querySelector('#time').innerText = params.time
 		},
 		htmlFinishElement: document.querySelector('#isDone'),
 		maxExecutionTime: document.querySelector('[name=max_execution_time]').value
