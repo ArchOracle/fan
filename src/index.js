@@ -24,7 +24,10 @@ function run() {
 			[
 				{
 					'condition': (x, y, currentState) => {
-						//return x % Math.ceil(Math.random() * 20 + 10) === 15 && y % Math.ceil(Math.random() * 20 + 10) === 15
+						// return Math.abs(100 - x) < 80 &&
+						// 	Math.abs(100 - y) < 80 &&
+						// 	x % Math.ceil(Math.random() * 20 + 30) === 0 &&
+						// 	y % Math.ceil(Math.random() * 20 + 30) === 0
 						return x === 100 && (y === 50 || y === 150)
 					},
 					'agentType': Source,
