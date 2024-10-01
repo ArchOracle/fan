@@ -10,6 +10,8 @@ export class Map {
 	static agentCount = 0
 	static maxEnergy = 0
 
+	static instance
+
 	constructor(height, width, seedConfig = [], postHandler = (agentList) => {return agentList}) {
 		this.height = height
 		this.width = width
@@ -18,6 +20,7 @@ export class Map {
 			this.seed(seedConfig)
 		}
 		this.postHandler = postHandler
+		Map.instance = this
 	}
 
 	evaluate() {
