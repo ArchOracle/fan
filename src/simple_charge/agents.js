@@ -145,12 +145,28 @@ export class Corpuscle extends Charge
 			dx: 0, dy: 0,
 			charge: this.getCharge()
 		}
-		if (this.x - radius < 0 || this.x + radius > 99) {
+		if (this.x - radius < radius) {
+			vector.dx = 2
 			return vector
 		}
-		if (this.y - radius < 0 || this.y + radius > 99) {
+		if (this.x + radius > 198 - radius) {
+			vector.dx = -2
 			return vector
 		}
+		if (this.y - radius < radius) {
+			vector.dy = 2
+			return vector
+		}
+		if (this.y + radius > 198 - radius) {
+			vector.dy = -2
+			return vector
+		}
+		// if (this.x - radius < 0 || this.x + radius > 99) {
+		// 	return vector
+		// }
+		// if (this.y - radius < 0 || this.y + radius > 99) {
+		// 	return vector
+		// }
 		//return vector
 		for (let x = this.x - radius; x <= this.x + radius; x += 1) {
 			for (let y = this.y - radius; y <= this.y + radius; y += 1) {
@@ -190,13 +206,13 @@ export class Field extends Charge
 	}
 
 	static fillArea(center, currentEnergy, charge, currentState, nextState) {
-		const pe = 7
-		const dE = 1 * currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
-		if (center.x - pe < 0 || center.x + pe > 99) {
+		const pe = 3//Math.ceil(1 + 15 * Math.random())
+		const dE = 2 * currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
+		if (center.x - pe < 0 || center.x + pe > 198) {
 			//console.log(center.x)
 			return
 		}
-		if (center.y - pe < 0 || center.y + pe > 99) {
+		if (center.y - pe < 0 || center.y + pe > 198) {
 			//console.log(center.y)
 			return
 		}

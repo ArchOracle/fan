@@ -19,12 +19,13 @@ function run() {
 	document.querySelector('#allDrawCount').innerText = document.querySelector('[name=frames_count]').value
 	let render = Render.create({
 		map: new Map(
-			100,
-			100,
+			200,
+			200,
 			[
 				{
 					'condition': (x, y, currentState) => {
-						return x % Math.ceil(Math.random() * 20 + 10) === 5 && y % Math.ceil(Math.random() * 20 + 10) === 5
+						//return x % Math.ceil(Math.random() * 20 + 10) === 15 && y % Math.ceil(Math.random() * 20 + 10) === 15
+						return x === 100 && (y === 50 || y === 150)
 					},
 					'agentType': Source,
 					'agentData': (x, y) => {return {
@@ -32,14 +33,15 @@ function run() {
 						y: y,
 						dx: 0,
 						dy: 0,
-						charge: Math.random() > 0.5 ? +1 : -1
+						charge: y < 100 ? +1 : -1
+						//charge: Math.random() > 0.5 ? +1 : -1
 					}}
 				}
 			],
 			Charge.postHandler
 		),
 		canvas: document.querySelector('#charge'),
-		timesCanvasToMap: 6,
+		timesCanvasToMap: 3,
 		fps: document.querySelector('[name=fps]').value,
 		needFrameCount: document.querySelector('[name=frames_count]').value,
 		converter: Charge.converter,
