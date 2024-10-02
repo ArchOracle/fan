@@ -1,4 +1,4 @@
-import {Matrix} from "../matrix/matrix";
+import {Matrix} from "../../ts/matrix/matrix";
 
 export class Agent {
 	x

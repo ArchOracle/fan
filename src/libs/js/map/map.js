@@ -1,4 +1,4 @@
-import {Matrix} from "../matrix/matrix";
+import {Matrix} from "../../ts/matrix/matrix";
 import {ImagePixels} from "../image/image";
 import {AgentList} from "../../../simple_charge/agents";
 
