@@ -1,10 +1,11 @@
 import {Matrix} from "../matrix/matrix";
 
 export class Agent {
-	protected x: number
-	protected y: number
-	protected agentData: object
-	constructor(x: number, y: number, agentData: object) {}
+	constructor(
+		protected x: number,
+		protected y: number,
+		protected agentData: object
+	) {}
 
 	evaluate(currentState: Matrix, nextState: Matrix) {
 
