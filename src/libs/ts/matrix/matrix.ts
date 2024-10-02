@@ -1,10 +1,12 @@
 export class Matrix {
-    height: number = 0
-    width: number = 0
     data: (Array<any> | Uint8ClampedArray)
     dataStorageType: new(length: number) => (Array<any> | Uint8ClampedArray)
 
-    constructor(height: number, width: number, dataStorageType: new(length: number) => (Array<any> | Uint8ClampedArray)) {
+    constructor(
+        public height: number = 0,
+        public width: number = 0,
+        dataStorageType: new(length: number) => (Array<any> | Uint8ClampedArray)
+    ) {
         this.dataStorageType = dataStorageType
         this.data = new (dataStorageType)(height * width);
     }
