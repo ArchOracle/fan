@@ -2,11 +2,13 @@ import {Matrix} from "../matrix/matrix";
 import {Agent} from "./agent";
 
 export class AgentList {
-    protected x: number
-    protected y: number
     protected agents: Array<Agent>
-
-    constructor(x: number, y: number) {}
+    constructor(
+        protected x: number,
+        protected y: number,
+    ) {
+        this.agents = []
+    }
 
     evaluate(currentState: Matrix, nextState: Matrix) {
     }
