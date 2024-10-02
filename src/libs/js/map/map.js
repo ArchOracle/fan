@@ -58,7 +58,6 @@ export class Map {
 	seed(config) {
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				(new AgentList(x, y)).saveToMatrix(this.storage)
 				config.forEach((configElement) => {
 					if ((configElement.condition)(x, y, this.storage)) {
 						this.addAgent(new (configElement.agentType)(x, y, (configElement.agentData)(x, y)))
