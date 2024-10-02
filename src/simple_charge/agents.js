@@ -1,6 +1,5 @@
-import {Matrix} from "../libs/js/matrix/matrix";
 import {Map} from "../libs/js/map/map";
-import {Agent} from "../libs/js/map/agent";
+import {Agent} from "../libs/ts/map/agent";
 import {AgentList} from "../libs/ts/map/agentList";
 
 export class SimpleAgent extends Agent {
