@@ -1,6 +1,7 @@
 import {Matrix} from "../libs/js/matrix/matrix";
 import {Map} from "../libs/js/map/map";
 import {Agent} from "../libs/js/map/agent";
+import {AgentList} from "../libs/ts/map/agentList";
 
 export class SimpleAgent extends Agent {
 	constructor(x, y, agentData) {
@@ -301,9 +302,7 @@ export class Field extends Charge {
 	}
 }
 
-export class ChargeList {
-	#x
-	#y
+export class ChargeList extends AgentList{
 	#source
 	#corpuscle
 	#field
@@ -311,25 +310,24 @@ export class ChargeList {
 	#fieldEnergy = 0
 
 	constructor(x, y) {
-		this.#x = x
-		this.#y = y
+		super(x, y);
 		this.#source = new Source(x, y, {
 			charge: 0,
 			count: 0,
-			x: this.#x,
-			y: this.#y
+			x: x,
+			y: y
 		})
 		this.#corpuscle = new Corpuscle(x, y, {
 			charge: 0,
 			count: 0,
-			x: this.#x,
-			y: this.#y
+			x: x,
+			y: y
 		})
 		this.#field = new Field(x, y, {
 			charge: 0,
 			energy: 0,
-			x: this.#x,
-			y: this.#y
+			x: x,
+			y: y
 		})
 	}
 
@@ -364,14 +362,6 @@ export class ChargeList {
 			this.getField().setCharge(charge)
 			this.#fieldCharge = charge
 		}
-	}
-
-	getX() {
-		return this.#x
-	}
-
-	getY() {
-		return this.#y
 	}
 
 	getSource() {
