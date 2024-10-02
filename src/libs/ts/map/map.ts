@@ -12,9 +12,14 @@ export class Map {
 	static agentCount: number = 0
 	static maxEnergy: number = 0
 
-	static instance
+	static instance: Map
 
-	constructor(height: number, width: number, seedConfig = [], postHandler = (agentList) => {return agentList}) {
+	constructor(
+		height: number,
+		width: number,
+		seedConfig = [],
+		postHandler = (agentList: AgentList): AgentList => {return agentList}
+	) {
 		this.height = height
 		this.width = width
 		this.storage = this.createStorage(height, width)//new Matrix(height, width, Array)
@@ -49,7 +54,7 @@ export class Map {
 		Map.addAgentToStorage(agent, this.storage)
 	}
 
-	static addAgentToStorage(agent: Agent, storage) {
+	static addAgentToStorage(agent: Agent, storage: Matrix) {
 		let agentList = AgentList.loadFromMatrix(storage, agent.getX(), agent.getY())
 		agentList.push(agent)
 		agentList.saveToMatrix(storage)
