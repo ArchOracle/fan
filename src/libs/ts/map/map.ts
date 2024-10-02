@@ -2,6 +2,7 @@ import {Matrix} from "../matrix/matrix";
 import {ImagePixels} from "../image/image";
 import {AgentList} from "./agentList";
 import {Agent} from "./agent";
+import {Seeder} from "./seeder";
 
 export class Map {
 	storage: Matrix
@@ -54,13 +55,13 @@ export class Map {
 		agentList.saveToMatrix(storage)
 	}
 
-	seed(config) {
+	seed(seeders: Array<Seeder>) {
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
 				(new AgentList(x, y)).saveToMatrix(this.storage)
-				config.forEach((configElement) => {
-					if ((configElement.condition)(x, y, this.storage)) {
-						this.addAgent(new (configElement.agentType)(x, y, (configElement.agentData)(x, y)))
+				seeders.forEach((seeder) => {
+					if (seeder.isNeedCreate(x, y, this.storage)) {
+						this.addAgent(seeder.getAgent(x, y))
 					}
 				})
 			}
