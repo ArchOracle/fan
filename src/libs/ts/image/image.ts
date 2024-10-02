@@ -1,4 +1,5 @@
 import {Matrix} from "../matrix/matrix";
+import {Pixel} from "./pixel";
 
 export class ImagePixels {
 	height: number = 0
@@ -18,14 +19,14 @@ export class ImagePixels {
 		this.width = imageData.width
 		this.imageData = imageData
 
-		this.fillMatrixes()
-	}
-
-	fillMatrixes() {
 		this.redMatrix = new Matrix(this.height, this.width, Uint8ClampedArray)
 		this.greenMatrix = new Matrix(this.height, this.width, Uint8ClampedArray)
 		this.blueMatrix = new Matrix(this.height, this.width, Uint8ClampedArray)
 		this.alphaMatrix = new Matrix(this.height, this.width, Uint8ClampedArray)
+		this.fillMatrixes()
+	}
+
+	fillMatrixes() {
 
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
@@ -60,14 +61,14 @@ export class ImagePixels {
 		}
 	}
 
-	setPixelColor(x: number, y: number, color: object) {
-		this.alphaMatrix.set(x, y, color.alpha)
-		this.redMatrix.set(x, y, color.red)
-		this.greenMatrix.set(x, y, color.green)
-		this.blueMatrix.set(x, y, color.blue)
+	setPixelColor(x: number, y: number, color: Pixel) {
+		this.alphaMatrix.set(x, y, color.getAlpha())
+		this.redMatrix.set(x, y, color.getRed())
+		this.greenMatrix.set(x, y, color.getGreen())
+		this.blueMatrix.set(x, y, color.getBlue())
 	}
 
-	increaseSize(times = 1) {
+	increaseSize(times: number = 1) {
 		if (times === 1) {
 			return this
 		}
