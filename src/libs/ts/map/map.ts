@@ -68,12 +68,11 @@ export class Map {
 		}
 	}
 
-	getSnapshot(converter: { (agentList: AgentList): object }) {
+	getSnapshot() {
 		let snapshot = ImagePixels.create(this.height, this.width)
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				let agentList = AgentList.loadFromMatrix(this.storage, x, y)
-				snapshot.setPixelColor(x, y, (converter)(agentList))
+				snapshot.setPixelColor(x, y, AgentList.loadFromMatrix(this.storage, x, y).getPixel())
 			}
 		}
 		snapshot.fillImageData()
