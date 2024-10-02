@@ -219,7 +219,7 @@ export class Corpuscle extends Charge {
 		isBreak = false;
 		for (let x = this.x - radius; x <= this.x + radius; x += 1) {
 			for (let y = this.y - radius; y <= this.y + radius; y += 1) {
-				let agentList = AgentList.loadFromMatrix(currentState, x, y)
+				let agentList = ChargeList.loadFromMatrix(currentState, x, y)
 				const charge = agentList.getFieldCharge()
 				const energy = agentList.getFieldEnergy() * (this.getCharge() * charge) + (1 + Math.random() * 15)
 				if (
@@ -284,7 +284,7 @@ export class Field extends Charge {
 		const dE = 1 * currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
 		for (let x = center.x - pe; x <= center.x + pe; x += 1) {
 			for (let y = center.y - pe; y <= center.y + pe; y += 1) {
-				let agentList = AgentList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
+				let agentList = ChargeList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
 				let field = agentList.getField()//nextState.get(x,y).getField()
 				const localCharge = agentList.getFieldCharge()
 				let energy = field.agentData.energy * localCharge
@@ -301,7 +301,7 @@ export class Field extends Charge {
 	}
 }
 
-export class AgentList {
+export class ChargeList {
 	#x
 	#y
 	#source
@@ -428,8 +428,8 @@ export class AgentList {
 
 	static loadFromMatrix(matrix, x, y) {
 		let agentList = matrix.get(x, y)
-		if (!(agentList instanceof AgentList)) {
-			agentList = new AgentList(x, y)
+		if (!(agentList instanceof ChargeList)) {
+			agentList = new ChargeList(x, y)
 		}
 		return agentList
 	}

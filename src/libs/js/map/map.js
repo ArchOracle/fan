@@ -1,6 +1,6 @@
 import {Matrix} from "../../ts/matrix/matrix";
 import {ImagePixels} from "../image/image";
-import {AgentList} from "../../../simple_charge/agents";
+import {ChargeList} from "../../../simple_charge/agents";
 
 export class Map {
 	storage
@@ -28,7 +28,7 @@ export class Map {
 		Map.agentCount = 0
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
-				let agentList = AgentList.loadFromMatrix(this.storage, x, y)//this.storage.get(x, y)
+				let agentList = ChargeList.loadFromMatrix(this.storage, x, y)//this.storage.get(x, y)
 				Map.agentCount += agentList.getSource().getCharge() !== 0
 				Map.agentCount += agentList.getCorpuscle().getCharge() !== 0
 				Map.agentCount += agentList.getFieldCharge() !== 0
@@ -50,7 +50,7 @@ export class Map {
 	}
 
 	static addAgentToStorage(agent, storage) {
-		let agentList = AgentList.loadFromMatrix(storage, agent.x, agent.y)
+		let agentList = ChargeList.loadFromMatrix(storage, agent.x, agent.y)
 		agentList.push(agent)
 		agentList.saveToMatrix(storage)
 	}
@@ -71,7 +71,7 @@ export class Map {
 		let snapshot = ImagePixels.create(this.height, this.width)
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				let agentList = AgentList.loadFromMatrix(this.storage, x, y)
+				let agentList = ChargeList.loadFromMatrix(this.storage, x, y)
 				snapshot.setPixelColor(x, y, (converter)(agentList))
 			}
 		}
