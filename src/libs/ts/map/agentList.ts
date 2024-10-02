@@ -1,5 +1,6 @@
 import {Matrix} from "../matrix/matrix";
 import {Agent} from "./agent";
+import {Pixel} from "../image/pixel";
 
 export class AgentList {
     protected agents: Array<Agent>
@@ -33,6 +34,10 @@ export class AgentList {
 
     getCountExistsAgent(): number {
         return this.agents.length
+    }
+
+    getPixel(): Pixel {
+        return new Pixel(255, 0, 0, 0)
     }
 
     saveToMatrix(matrix: Matrix) {
