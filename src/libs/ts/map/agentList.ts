@@ -1,6 +1,7 @@
 import {Matrix} from "../matrix/matrix";
 import {Agent} from "./agent";
 import {Pixel} from "../image/pixel";
+import {State} from "./state";
 
 export class AgentList {
     protected agents: Array<Agent>
@@ -41,9 +42,9 @@ export class AgentList {
         return new Pixel(255, 0, 0, 0)
     }
 
-    saveToMatrix(matrix: Matrix) {
+    save(state: State) {
         if (this.isNeedSave()) {
-            matrix.set(this.getX(), this.getY(), this)
+            state.set(this.getX(), this.getY(), this)
         }
         return this
     }
