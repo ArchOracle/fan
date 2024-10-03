@@ -17,7 +17,7 @@ export class Map {
 	constructor(
 		height: number,
 		width: number,
-		seedConfig = [],
+		seedConfig: Array<Seeder> = [],
 		postHandler = (agentList: AgentList): AgentList => {return agentList}
 	) {
 		this.height = height
