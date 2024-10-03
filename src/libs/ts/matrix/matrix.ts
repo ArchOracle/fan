@@ -1,6 +1,6 @@
 export class Matrix {
-    data: (Array<any> | Uint8ClampedArray)
-    dataStorageType: new(length: number) => (Array<any> | Uint8ClampedArray)
+    protected data: (Array<any> | Uint8ClampedArray)
+    protected dataStorageType: new(length: number) => (Array<any> | Uint8ClampedArray)
 
     constructor(
         public height: number = 0,
