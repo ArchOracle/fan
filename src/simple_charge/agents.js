@@ -1,4 +1,4 @@
-import {Map} from "../libs/js/map/map";
+import {Map} from "../libs/ts/map/map";
 import {Agent} from "../libs/ts/map/agent";
 import {AgentList} from "../libs/ts/map/agentList";
 
