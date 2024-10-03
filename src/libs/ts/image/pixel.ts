@@ -22,4 +22,24 @@ export class Pixel {
     getBlue() {
         return this.blue
     }
+
+    setAlpha(alpha: number) {
+        this.alpha = alpha
+        return this
+    }
+
+    setRed(red: number) {
+        this.red = red
+        return this
+    }
+
+    setGreen(green: number) {
+        this.green = green
+        return this
+    }
+
+    setBlue(blue: number) {
+        this.blue = blue
+        return this
+    }
 }
