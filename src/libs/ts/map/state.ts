@@ -47,7 +47,7 @@ export class State extends Matrix {
 
 
     addAgent(agent: Agent): State {
-        this.loadAgentList(agent.getX(), agent.getY()).push(agent).saveToMatrix(this)
+        this.loadAgentList(agent.getX(), agent.getY()).push(agent).save(this)
         return this
     }
 
