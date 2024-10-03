@@ -19,7 +19,7 @@ export class Source extends Charge {
             x: this.x + dx,
             y: this.y + dy,
             charge: this.getCharge()
-        }))
+        }).setCount(1))
         Field.fillArea({x: this.x, y: this.y}, 10, this.getCharge(), currentState, nextState)
     }
 

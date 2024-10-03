@@ -30,7 +30,7 @@ export class Corpuscle extends Charge {
                             count: 1,
                             charge: this.getCharge()
                         }
-                    )
+                    ).setCount(1)
                     nextState.addAgent(c1)
                 }
             }
@@ -48,7 +48,7 @@ export class Corpuscle extends Charge {
                         count: 1,
                         charge: this.getCharge()
                     }
-                )
+                ).setCount(1)
                 nextState.addAgent(c1)
             }
         }
