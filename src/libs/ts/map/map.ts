@@ -3,7 +3,7 @@ import {AgentList} from "./agentList";
 import {Agent} from "./agent";
 import {Seeder} from "./seeder";
 import {State} from "./state";
-import {ChargeList} from "../../../simple_charge/agents.js"
+import {ChargeList} from "../../../simple_charge/charges/chargelist"
 
 export class Map {
 	state: State

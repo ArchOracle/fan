@@ -12,7 +12,7 @@ export class AgentList {
         this.agents = []
     }
 
-    evaluate(currentState: Matrix, nextState: Matrix) {
+    evaluate(currentState: State, nextState: State) {
     }
 
     push(agent: Agent) {

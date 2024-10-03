@@ -1,4 +1,5 @@
 import {Matrix} from "../matrix/matrix";
+import {State} from "./state";
 
 export class Agent {
 	constructor(
@@ -7,7 +8,7 @@ export class Agent {
 		protected agentData: object
 	) {}
 
-	evaluate(currentState: Matrix, nextState: Matrix) {
+	evaluate(currentState: State, nextState: State) {
 
 	}
 
