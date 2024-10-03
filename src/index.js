@@ -1,7 +1,8 @@
 import {Map} from "./libs/ts/map/map";
-import {Charge, Source} from "./simple_charge/agents";
 import {Render, RenderConfig} from "./libs/ts/render/render";
 import {Seeder} from "./libs/ts/map/seeder";
+import {Charge} from "./simple_charge/charges/charge";
+import {Source} from "./simple_charge/charges/source";
 
 if (window.location.pathname === "/simple_charge/index.html") {
 	document.addEventListener('DOMContentLoaded', () => {
@@ -31,7 +32,7 @@ function run() {
 							// 	y % Math.ceil(Math.random() * 20 + 30) === 0
 							return x === 100 && (y === 50 || y === 150)
 						},
-						(x, y) => {return new Source(x, y, {
+						(x, y) => {return new Source(x, y, y < 100 ? +1 : -1, {
 							x: x,
 							y: y,
 							dx: 0,
