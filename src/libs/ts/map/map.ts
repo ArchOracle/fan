@@ -36,7 +36,7 @@ export class Map {
 		Map.agentCount = 0
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
-				let agentList = AgentList.loadFromMatrix(this.state, x, y)//this.storage.get(x, y)
+				let agentList = this.loadAgentList(x, y)//this.storage.get(x, y)
 				Map.agentCount += agentList.getCountExistsAgent()
 				agentList.evaluate(this.state, nextState)
 			}
@@ -52,7 +52,7 @@ export class Map {
 	}
 
 	addAgent(agent: Agent) {
-		this.loadAgentList(agent.getX(), agent.getY()).push(agent).saveToMatrix(this.state)
+		this.loadAgentList(agent.getX(), agent.getY()).push(agent).save(this.state)
 	}
 
 	seed(seeders: Array<Seeder>) {
