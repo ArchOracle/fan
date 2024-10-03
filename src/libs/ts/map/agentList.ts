@@ -18,6 +18,7 @@ export class AgentList {
         if (this.isNeedSaveAgent(agent)) {
             this.agents.push(agent)
         }
+        return this
     }
 
     isNeedSaveAgent(agent: Agent): boolean {
@@ -44,6 +45,7 @@ export class AgentList {
         if (this.isNeedSave()) {
             matrix.set(this.getX(), this.getY(), this)
         }
+        return this
     }
 
     isNeedSave(): boolean {
