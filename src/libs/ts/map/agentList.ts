@@ -52,12 +52,4 @@ export class AgentList {
     isNeedSave(): boolean {
         return true
     }
-
-    static loadFromMatrix(matrix: Matrix, x: number, y: number): AgentList {
-        let agentList = matrix.get(x, y)
-        if (!(agentList instanceof AgentList)) {
-            agentList = new AgentList(x, y)
-        }
-        return agentList
-    }
 }
