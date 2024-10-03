@@ -1,11 +1,12 @@
-import {Matrix} from "../matrix/matrix";
 import {ImagePixels} from "../image/image";
 import {AgentList} from "./agentList";
 import {Agent} from "./agent";
 import {Seeder} from "./seeder";
+import {State} from "./state";
+import {ChargeList} from "../../../simple_charge/agents.js"
 
 export class Map {
-	storage: Matrix
+	state: State
 	height: number
 	width: number
 	postHandler
@@ -22,7 +23,7 @@ export class Map {
 	) {
 		this.height = height
 		this.width = width
-		this.storage = this.createStorage(height, width)//new Matrix(height, width, Array)
+		this.state = this.createStorage(height, width)//new Matrix(height, width, Array)
 		if (seedConfig.length > 0) {
 			this.seed(seedConfig)
 		}
@@ -35,9 +36,9 @@ export class Map {
 		Map.agentCount = 0
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
-				let agentList = AgentList.loadFromMatrix(this.storage, x, y)//this.storage.get(x, y)
+				let agentList = AgentList.loadFromMatrix(this.state, x, y)//this.storage.get(x, y)
 				Map.agentCount += agentList.getCountExistsAgent()
-				agentList.evaluate(this.storage, nextState)
+				agentList.evaluate(this.state, nextState)
 			}
 		}
 		for (let y = 0; y < this.height; y += 1) {
@@ -47,25 +48,18 @@ export class Map {
 				}
 			}
 		}
-		this.storage = nextState
+		this.state = nextState
 	}
 
 	addAgent(agent: Agent) {
-		Map.addAgentToStorage(agent, this.storage)
-	}
-
-	static addAgentToStorage(agent: Agent, storage: Matrix) {
-		let agentList = AgentList.loadFromMatrix(storage, agent.getX(), agent.getY())
-		agentList.push(agent)
-		agentList.saveToMatrix(storage)
+		this.loadAgentList(agent.getX(), agent.getY()).push(agent).saveToMatrix(this.state)
 	}
 
 	seed(seeders: Array<Seeder>) {
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				(new AgentList(x, y)).saveToMatrix(this.storage)
 				seeders.forEach((seeder) => {
-					if (seeder.isNeedCreate(x, y, this.storage)) {
+					if (seeder.isNeedCreate(x, y, this.state)) {
 						this.addAgent(seeder.getAgent(x, y))
 					}
 				})
@@ -77,15 +71,24 @@ export class Map {
 		let snapshot = ImagePixels.create(this.height, this.width)
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				snapshot.setPixelColor(x, y, AgentList.loadFromMatrix(this.storage, x, y).getPixel())
+				snapshot.setPixelColor(x, y, this.loadAgentList(x, y).getPixel())
 			}
 		}
 		snapshot.fillImageData()
 		return snapshot
 	}
 
-	createStorage(height: number, width: number): Matrix {
-		return new Matrix(height, width, Array)
-		// return new M2(height, width)
+	createStorage(height: number, width: number): State {
+		return State.create(
+			height,
+			width,
+			Array,
+			this,
+			ChargeList
+		)
+	}
+
+	loadAgentList(x: number, y: number): AgentList {
+		return this.state.loadAgentList(x, y)
 	}
 }
