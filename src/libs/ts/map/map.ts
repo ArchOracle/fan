@@ -9,7 +9,6 @@ export class Map {
 	state: State
 	height: number
 	width: number
-	postHandler
 	static agentCount: number = 0
 	static maxEnergy: number = 0
 
@@ -18,8 +17,7 @@ export class Map {
 	constructor(
 		height: number,
 		width: number,
-		seedConfig: Array<Seeder> = [],
-		postHandler = (agentList: AgentList): AgentList => {return agentList}
+		seedConfig: Array<Seeder> = []
 	) {
 		this.height = height
 		this.width = width
@@ -27,7 +25,6 @@ export class Map {
 		if (seedConfig.length > 0) {
 			this.seed(seedConfig)
 		}
-		this.postHandler = postHandler
 		Map.instance = this
 	}
 
@@ -39,13 +36,6 @@ export class Map {
 				let agentList = this.loadAgentList(x, y)//this.storage.get(x, y)
 				Map.agentCount += agentList.getCountExistsAgent()
 				agentList.evaluate(this.state, nextState)
-			}
-		}
-		for (let y = 0; y < this.height; y += 1) {
-			for (let x = 0; x < this.width; x += 1) {
-				if (!!this.postHandler && (typeof this.postHandler === 'function')) {
-					nextState.set(x, y, (this.postHandler)(nextState.get(x, y)))
-				}
 			}
 		}
 		this.state = nextState

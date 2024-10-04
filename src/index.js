@@ -15,7 +15,6 @@ if (window.location.pathname === "/simple_charge/index.html") {
 }
 
 function run() {
-
 	document.querySelector('#allCalculateCount').innerText = document.querySelector('[name=frames_count]').value
 	document.querySelector('#allDrawCount').innerText = document.querySelector('[name=frames_count]').value
 	let render = Render.create(
@@ -41,8 +40,7 @@ function run() {
 							//charge: Math.random() > 0.5 ? +1 : -1
 						})}
 					),
-				],
-				Charge.postHandler
+				]
 			),
 			document.querySelector('#charge'),
 			3,
