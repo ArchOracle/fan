@@ -90,7 +90,7 @@ export class Corpuscle extends Charge {
         }
         for (let x = this.x - radius; x <= this.x + radius; x += 1) {
             for (let y = this.y - radius; y <= this.y + radius; y += 1) {
-                let agentList = <ChargeList>currentState.loadAgentList(x, y)
+                let agentList = <ChargeList><unknown>currentState.loadAgentList(x, y)
                 const charge = agentList.getFieldCharge()
                 const energy = agentList.getFieldEnergy() * (this.getCharge() * charge) + (1 + Math.random() * 15)
                 if (

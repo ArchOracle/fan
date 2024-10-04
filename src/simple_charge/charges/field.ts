@@ -36,7 +36,7 @@ export class Field extends Charge {
         const dE = currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
         for (let x = center.x - pe; x <= center.x + pe; x += 1) {
             for (let y = center.y - pe; y <= center.y + pe; y += 1) {
-                let agentList: ChargeList = <ChargeList>nextState.loadAgentList(x, y)//ChargeList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
+                let agentList: ChargeList = <ChargeList>(<unknown>nextState.loadAgentList(x, y))//ChargeList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
                 let field = agentList.getField()//nextState.get(x,y).getField()
                 const localCharge = agentList.getFieldCharge()
                 let energy = field.getEnergy() * localCharge
