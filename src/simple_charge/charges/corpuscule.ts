@@ -69,32 +69,13 @@ export class Corpuscle extends Charge {
             dx: 0, dy: 0,
             charge: this.getCharge()
         }
-        if (this.x - 4 < radius / 2) {
-            vector.dx = 2
-            isBreak = true
-        }
-        if (this.x + 4 > Map.instance.width - radius / 2) {
-            vector.dx = -2
-            isBreak = true
-        }
-        if (this.y - 4 < radius / 2) {
-            vector.dy = 2
-            isBreak = true
-        }
-        if (this.y + 4 > Map.instance.height - radius / 2) {
-            vector.dy = -2
-            isBreak = true
-        }
-        if (false && isBreak) {
-            return vector
-        }
         for (let x = this.x - radius; x <= this.x + radius; x += 1) {
             for (let y = this.y - radius; y <= this.y + radius; y += 1) {
                 let agentList = <ChargeList><unknown>currentState.loadAgentList(x, y)
                 const charge = agentList.getFieldCharge()
                 const energy = agentList.getFieldEnergy() * (this.getCharge() * charge) + (1 + Math.random() * 15)
                 if (
-                    this.isNeedVector(vector, charge, energy)
+                    vector.energy > energy
                 ) {
                     vector = {
                         energy: energy,
@@ -108,16 +89,6 @@ export class Corpuscle extends Charge {
         vector.dx = Math.sign(vector.dx)
         vector.dy = Math.sign(vector.dy)
         return vector
-    }
-
-    isNeedVector(vector: { energy: number, dx: number, dy: number, charge: number }, charge: number, energy: number) {
-        if (vector.charge * charge === -1) {
-            return vector.energy > energy
-        } else if (vector.charge * charge === 1) {
-            return vector.energy > energy
-        } else {
-            return Math.random() > 0.7
-        }
     }
 
     getCount() {
