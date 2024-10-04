@@ -63,32 +63,41 @@ export class Corpuscle extends Charge {
 
     getVectorMinimalField(currentState: State) {
         const radius = 10
-        let isBreak = false;
-        let vector = {
-            energy: 1000200,
-            dx: 0, dy: 0,
-            charge: this.getCharge()
-        }
+        // let vector = {
+        //     energy: 1000200,
+        //     dx: 0, dy: 0,
+        //     charge: this.getCharge()
+        // }
+        let vectorEnergy = 100500, vectorDx = 0, vectorDy = 0, vectorCharge = this.getCharge()
         for (let x = this.x - radius; x <= this.x + radius; x += 1) {
             for (let y = this.y - radius; y <= this.y + radius; y += 1) {
                 let agentList = <ChargeList><unknown>currentState.loadAgentList(x, y)
                 const charge = agentList.getFieldCharge()
                 const energy = agentList.getFieldEnergy() * (this.getCharge() * charge) + (1 + Math.random() * 15)
                 if (
-                    vector.energy > energy
+                    vectorEnergy > energy
                 ) {
-                    vector = {
-                        energy: energy,
-                        dx: x - this.x,
-                        dy: y - this.y,
-                        charge: charge
-                    }
+                    vectorEnergy = energy
+                    vectorDx = x - this.x > 0 ? 1 : (x - this.x === 0 ? 0 : -1)
+                    vectorDy = y - this.y > 0 ? 1 : (y - this.y === 0 ? 0 : -1)
+                    vectorCharge = charge
+                    // vector = {
+                    //     energy: energy,
+                    //     dx: x - this.x,
+                    //     dy: y - this.y,
+                    //     charge: charge
+                    // }
                 }
             }
         }
-        vector.dx = Math.sign(vector.dx)
-        vector.dy = Math.sign(vector.dy)
-        return vector
+        // vector.dx = Math.sign(vector.dx)
+        // vector.dy = Math.sign(vector.dy)
+        return {
+            energy: vectorEnergy,
+            dx: vectorDx,
+            dy: vectorDy,
+            charge: vectorCharge
+        }
     }
 
     getCount() {
