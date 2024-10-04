@@ -53,7 +53,7 @@ export class State extends Matrix {
 
     loadAgentList(x: number, y: number): AgentList {
         let agentList = this.get(x, y)
-        if (!agentList || (agentList.constructor === (<AgentListType>this.agentListType).constructor)) {
+        if (!agentList) {
             agentList = new (<AgentListType>this.agentListType)(x, y)
         }
         return agentList
