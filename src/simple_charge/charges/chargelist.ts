@@ -7,32 +7,14 @@ import {State} from "../../libs/ts/map/state";
 import {Charge} from "./charge";
 
 export class ChargeList extends AgentList{
-    #source: Source
-    #corpuscle: Corpuscle
-    #field: Field
+    #source?: Source
+    #corpuscle?: Corpuscle
+    #field?: Field
     #fieldCharge: number = 0
     #fieldEnergy: number = 0
 
     constructor(x: number, y: number) {
         super(x, y);
-        this.#source = new Source(x, y, 0, {
-            charge: 0,
-            count: 0,
-            x: x,
-            y: y
-        })
-        this.#corpuscle = new Corpuscle(x, y, 0, {
-            charge: 0,
-            count: 0,
-            x: x,
-            y: y
-        })
-        this.#field = new Field(x, y, 0, {
-            charge: 0,
-            energy: 0,
-            x: x,
-            y: y
-        })
     }
 
     evaluate(storage: State, state: State) {
@@ -69,16 +51,40 @@ export class ChargeList extends AgentList{
         return this
     }
 
-    getSource() {
-        return this.#source
+    getSource(): Source {
+        if (!this.#source) {
+            this.#source = new Source(this.x, this.y, 0, {
+                    charge: 0,
+                    count: 0,
+                    x: this.x,
+                    y: this.y
+                })
+        }
+        return <Source>this.#source
     }
 
-    getCorpuscle() {
-        return this.#corpuscle
+    getCorpuscle(): Corpuscle {
+        if (!this.#corpuscle) {
+            this.#corpuscle = new Corpuscle(this.x, this.y, 0, {
+                charge: 0,
+                count: 0,
+                x: this.x,
+                y: this.y
+            })
+        }
+        return <Corpuscle>this.#corpuscle
     }
 
-    getField() {
-        return this.#field
+    getField(): Field {
+        if (!this.#field) {
+            this.#field = new Field(this.x, this.y, 0, {
+                charge: 0,
+                count: 0,
+                x: this.x,
+                y: this.y
+            })
+        }
+        return <Field>this.#field
     }
 
     getFieldCharge() {
@@ -107,8 +113,8 @@ export class ChargeList extends AgentList{
     }
 
     saveField() {
-        this.#fieldCharge = this.#field.getCharge()
-        this.#fieldEnergy = this.#field.getEnergy()
+        this.#fieldCharge = this.#field!.getCharge()
+        this.#fieldEnergy = this.#field!.getEnergy()
         return this
     }
 
