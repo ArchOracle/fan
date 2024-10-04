@@ -62,7 +62,7 @@ export class Corpuscle extends Charge {
     }
 
     getVectorMinimalField(currentState: State) {
-        const radius = 10
+        const radius = 30
         // let vector = {
         //     energy: 1000200,
         //     dx: 0, dy: 0,
