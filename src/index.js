@@ -20,8 +20,8 @@ function run() {
 	let render = Render.create(
 		new RenderConfig(
 			new Map(
-				200,
-				200,
+				600,
+				600,
 				[
 					new Seeder(
 						(x, y, currentState) => {
@@ -29,21 +29,21 @@ function run() {
 							// 	Math.abs(100 - y) < 80 &&
 							// 	x % Math.ceil(Math.random() * 20 + 30) === 0 &&
 							// 	y % Math.ceil(Math.random() * 20 + 30) === 0
-							return x === 100 && (y === 50 || y === 150)
+							return x === 300 && (y === 150 || y === 450)
 						},
-						(x, y) => {return new Source(x, y, y < 100 ? +1 : -1, {
+						(x, y) => {return new Source(x, y, y < 300 ? +1 : -1, {
 							x: x,
 							y: y,
 							dx: 0,
 							dy: 0,
-							charge: y < 100 ? +1 : -1
+							charge: y < 300 ? +1 : -1
 							//charge: Math.random() > 0.5 ? +1 : -1
 						})}
 					),
 				]
 			),
 			document.querySelector('#charge'),
-			3,
+			1,
 			10,
 			document.querySelector('[name=frames_count]').value,
 			Charge.converter,

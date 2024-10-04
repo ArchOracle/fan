@@ -36,8 +36,8 @@ export class Corpuscle extends Charge {
             }
         } else {
             for (let i = 1; i <= this.getCount(); i += 1) {
-                const x = Math.ceil(Math.random() * 100 + 50)
-                const y = Math.ceil(Math.random() * 150 + 50)
+                const x = Math.ceil(Math.random() * 500 + 50)
+                const y = Math.ceil(Math.random() * 550 + 50)
                 let c1 = new Corpuscle(
                     x,
                     y,
@@ -57,8 +57,8 @@ export class Corpuscle extends Charge {
     isNeedEvaluate(state: State) {
         return (this.getX() > 10) &&
             (this.getY() > 10) &&
-            (this.getX() < 190) &&
-            (this.getY() < 190)// && (Math.random() < 0.995)
+            (this.getX() < 590) &&
+            (this.getY() < 590)// && (Math.random() < 0.995)
     }
 
     getVectorMinimalField(currentState: State) {
