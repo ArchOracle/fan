@@ -45,5 +45,5 @@ module.exports = {
 		open: true, // Автоматически открывать браузер
 	},
 
-	mode: 'development', // Режим сборки
+	mode: 'production', // Режим сборки
 };
