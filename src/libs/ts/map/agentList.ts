@@ -4,12 +4,12 @@ import {Pixel} from "../image/pixel";
 import {State} from "./state";
 
 export class AgentList {
-    protected agents: Array<Agent>
+    // protected agents: Array<Agent>
     constructor(
         protected x: number,
         protected y: number,
     ) {
-        this.agents = []
+        // this.agents = []
     }
 
     evaluate(currentState: State, nextState: State) {
@@ -17,7 +17,7 @@ export class AgentList {
 
     push(agent: Agent) {
         if (this.isNeedSaveAgent(agent)) {
-            this.agents.push(agent)
+            //this.agents.push(agent)
         }
         return this
     }
@@ -35,7 +35,7 @@ export class AgentList {
     }
 
     getCountExistsAgent(): number {
-        return this.agents.length
+        return 0//this.agents.length
     }
 
     getPixel(): Pixel {
