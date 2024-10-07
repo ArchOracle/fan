@@ -15,6 +15,7 @@ export class Map {
 	static instance: Map
 
 	protected currentSnapshot?: ImagePixels
+	protected nextState?: State
 
 	constructor(
 		height: number,
@@ -31,16 +32,18 @@ export class Map {
 	}
 
 	evaluate() {
-		let nextState = this.createStorage(this.height, this.width)//new Matrix(this.height, this.width, Array)
+		this.nextState = this.createStorage(this.height, this.width)//new Matrix(this.height, this.width, Array)
 		Map.agentCount = 0
+		let agentList
 		for (let y = 0; y < this.height; y += 1) {
 			for (let x = 0; x < this.width; x += 1) {
-				let agentList = this.loadAgentList(x, y)//this.storage.get(x, y)
+				agentList = this.loadAgentList(x, y)//this.storage.get(x, y)
 				Map.agentCount += agentList.getCountExistsAgent()
-				agentList.evaluate(this.state, nextState)
+				agentList.evaluate(this.state, this.nextState)
 			}
 		}
-		this.state = nextState
+		this.state = this.nextState
+		agentList = null
 	}
 
 	addAgent(agent: Agent) {
