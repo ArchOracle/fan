@@ -34,23 +34,27 @@ export class Field extends Charge {
             return;
         }
         const dE = currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
-        for (let x = center.x - pe; x <= center.x + pe; x += 1) {
-            for (let y = center.y - pe; y <= center.y + pe; y += 1) {
-                let agentList: ChargeList = <ChargeList>(<unknown>nextState.loadAgentList(x, y))//ChargeList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
-                let field = agentList.getField()//nextState.get(x,y).getField()
-                const localCharge = agentList.getFieldCharge()
-                let energy = field.getEnergy() * localCharge
-                energy += dE * charge
+        let agentList: (ChargeList|null), field, energy
+        const minX = center.x - pe, maxX = center.x + pe
+        const minY = center.y - pe, maxY = center.y + pe
+        for (let x = minX; x <= maxX; x += 1) {
+            for (let y = minY; y <= maxY; y += 1) {
+                agentList = <ChargeList>(<unknown>nextState.loadAgentList(x, y))//ChargeList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()
+                field = agentList.getField()//nextState.get(x,y).getField()
+                energy = agentList.getFieldEnergy() * agentList.getFieldCharge() + dE * charge
                 field
                     .setCharge(Math.sign(energy))
                     .setEnergy(Math.abs(energy))
                 if (field.getEnergy() > Map.maxEnergy) {
-                    Map.maxEnergy = field.getEnergy()
+                    Map.maxEnergy = Math.abs(energy)
                 }
                 agentList
                     .saveField()
                     .save(nextState)
             }
         }
+        agentList = null
+        field = null
+        energy = null
     }
 }
