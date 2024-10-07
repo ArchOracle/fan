@@ -7,7 +7,7 @@ export class Field extends Charge {
     protected energy: number = 0
     evaluate(currentState: State, nextState: State) {
         super.evaluate(currentState, nextState);
-        Field.fillArea(this.x, this.y, this.getEnergy(), this.getCharge(), currentState, nextState)
+        Field.fillArea(this.x, this.y, this.energy, this.charge, currentState, nextState)
     }
 
     getEnergy() {
