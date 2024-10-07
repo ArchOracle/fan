@@ -8,7 +8,11 @@ import {Charge} from "./charge";
 
 export class ChargeList extends AgentList{
     #source?: Source
+    #sourceCharge: number = 0
+    #sourceCount: number = 0
     #corpuscle?: Corpuscle
+    #corpuscleCharge: number = 0
+    #corpuscleCount: number = 0
     #field?: Field
     #fieldCharge: number = 0
     #fieldEnergy: number = 0
@@ -22,34 +26,40 @@ export class ChargeList extends AgentList{
     }
 
     evaluate(storage: State, state: State) {
-        if (this.getSource().getCharge() !== 0) {
+        if (this.isExistSource) {
             this.getSource().evaluate(storage, state)
         }
-        if (this.getCorpuscle().getCharge() !== 0) {
+        if (this.isExistCorpuscle) {
             this.getCorpuscle().evaluate(storage, state)
         }
-        if (this.getFieldCharge() !== 0) {
+        if (this.isExistField) {
             this.getField().evaluate(storage, state)
         }
     }
 
     push(agent: Charge) {
         if (agent instanceof Source) {
-            const charge = this.getSource().getCharge() + agent.getCharge()
+            const charge = this.getSourceCharge() + agent.getCharge()
+            const count = this.getSourceCount() + agent.getCount()
             this.getSource().setCharge(charge)
-            this.getSource().setCount(this.getSource().getCount() + agent.getCount())
+            this.getSource().setCount(count)
             this.isExistSource = charge !== 0
+            this.#sourceCharge = charge
+            this.#sourceCount = count
         }
         if (agent instanceof Corpuscle) {
             const otherCharge = agent.getCharge()
             const otherCount = agent.getCount()
 
-            let newCount = this.getCorpuscle().getCharge() * this.getCorpuscle().getCount() + otherCharge * otherCount
+            let newCount = this.getCorpuscleCharge() * this.getCorpuscleCount() + otherCharge * otherCount
             const charge = Math.sign(newCount)
+            const count = Math.abs(newCount)
             this.getCorpuscle().setCharge(charge)
-            this.getCorpuscle().setCount(Math.abs(newCount))
+            this.getCorpuscle().setCount(count)
 
             this.isExistCorpuscle = charge !== 0
+            this.#corpuscleCharge = charge
+            this.#corpuscleCount = count
         }
         if (agent instanceof Field) {
             const charge = this.getFieldCharge() + agent.getCharge()
@@ -72,6 +82,14 @@ export class ChargeList extends AgentList{
         return <Source>this.#source
     }
 
+    getSourceCharge() {
+        return this.#sourceCharge
+    }
+
+    getSourceCount() {
+        return this.#sourceCount
+    }
+
     getCorpuscle(): Corpuscle {
         if (!this.#corpuscle) {
             this.#corpuscle = new Corpuscle(this.x, this.y, 0, {
@@ -82,6 +100,14 @@ export class ChargeList extends AgentList{
             })
         }
         return <Corpuscle>this.#corpuscle
+    }
+
+    getCorpuscleCharge() {
+        return this.#corpuscleCharge
+    }
+
+    getCorpuscleCount() {
+        return this.#corpuscleCount
     }
 
     getField(): Field {
@@ -109,8 +135,22 @@ export class ChargeList extends AgentList{
         return this
     }
 
+    saveSource() {
+        this.#sourceCharge = this.#source!.getCharge()
+        this.#sourceCount = this.#source!.getCount()
+        this.isExistSource = this.#sourceCharge !== 0
+        return this
+    }
+
     setCorpuscle(corpuscle: Corpuscle) {
         this.#corpuscle = corpuscle
+        return this
+    }
+
+    saveCorpuscle() {
+        this.#corpuscleCharge = this.#corpuscle!.getCharge()
+        this.#corpuscleCount = this.#corpuscle!.getCount()
+        this.isExistCorpuscle = this.#corpuscleCharge !== 0
         return this
     }
 
