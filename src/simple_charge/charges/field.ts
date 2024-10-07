@@ -7,7 +7,7 @@ export class Field extends Charge {
     protected energy: number = 0
     evaluate(currentState: State, nextState: State) {
         super.evaluate(currentState, nextState);
-        Field.fillArea({x: this.x, y: this.y}, this.getEnergy(), this.getCharge(), currentState, nextState)
+        Field.fillArea(this.x, this.y, this.getEnergy(), this.getCharge(), currentState, nextState)
     }
 
     getEnergy() {
@@ -19,13 +19,13 @@ export class Field extends Charge {
         return this
     }
 
-    static fillArea(center: {x: number, y: number}, currentEnergy: number, charge: number, currentState: State, nextState: State) {
+    static fillArea(x0: number, y0: number, currentEnergy: number, charge: number, currentState: State, nextState: State) {
         const pe = 1//Math.ceil(1 + 15 * Math.random())
-        if (center.x - pe < 0 || center.x + pe > Map.instance.height - 2) {
+        if (x0 - pe < 0 || x0 + pe > Map.instance.height - 2) {
             //console.log(center.x)
             return
         }
-        if (center.y - pe < 0 || center.y + pe > Map.instance.height - 2) {
+        if (y0 - pe < 0 || y0 + pe > Map.instance.height - 2) {
             //console.log(center.y)
             return
         }
@@ -35,8 +35,8 @@ export class Field extends Charge {
         }
         const dE = currentEnergy / ((2 * pe + 1) * (2 * pe + 1))
         let agentList: (ChargeList|null), field, energy
-        const minX = center.x - pe, maxX = center.x + pe
-        const minY = center.y - pe, maxY = center.y + pe
+        const minX = x0 - pe, maxX = x0 + pe
+        const minY = y0 - pe, maxY = y0 + pe
         for (let x = minX; x <= maxX; x += 1) {
             for (let y = minY; y <= maxY; y += 1) {
                 agentList = <ChargeList>(<unknown>nextState.loadAgentList(x, y))//ChargeList.loadFromMatrix(nextState, x, y)//nextState.get(x,y).getField()

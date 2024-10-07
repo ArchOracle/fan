@@ -15,7 +15,7 @@ export class Corpuscle extends Charge {
                 this.x += vector.dx
                 this.y += vector.dy
                 nextState.addAgent(this)
-                Field.fillArea({x: this.x, y: this.y}, 1, this.getCharge(), currentState, nextState)
+                Field.fillArea(this.x, this.y, 1, this.getCharge(), currentState, nextState)
             } else {
                 for (let i = 1; i <= this.getCount(); i += 1) {
                     const x = this.x + Math.ceil(Math.random() * 20 - 10)
