@@ -13,6 +13,10 @@ export class ChargeList extends AgentList{
     #fieldCharge: number = 0
     #fieldEnergy: number = 0
 
+    private isExistSource: boolean = false
+    private isExistCorpuscle: boolean = false
+    private isExistField: boolean = false
+
     constructor(x: number, y: number) {
         super(x, y);
     }
@@ -31,22 +35,27 @@ export class ChargeList extends AgentList{
 
     push(agent: Charge) {
         if (agent instanceof Source) {
-            this.getSource().setCharge(this.getSource().getCharge() + agent.getCharge())
+            const charge = this.getSource().getCharge() + agent.getCharge()
+            this.getSource().setCharge(charge)
             this.getSource().setCount(this.getSource().getCount() + agent.getCount())
+            this.isExistSource = charge !== 0
         }
         if (agent instanceof Corpuscle) {
             const otherCharge = agent.getCharge()
             const otherCount = agent.getCount()
 
             let newCount = this.getCorpuscle().getCharge() * this.getCorpuscle().getCount() + otherCharge * otherCount
-
-            this.getCorpuscle().setCharge(Math.sign(newCount))
+            const charge = Math.sign(newCount)
+            this.getCorpuscle().setCharge(charge)
             this.getCorpuscle().setCount(Math.abs(newCount))
+
+            this.isExistCorpuscle = charge !== 0
         }
         if (agent instanceof Field) {
             const charge = this.getFieldCharge() + agent.getCharge()
             this.getField().setCharge(charge)
             this.#fieldCharge = charge
+            this.isExistField = charge !== 0
         }
         return this
     }
@@ -115,14 +124,15 @@ export class ChargeList extends AgentList{
     saveField() {
         this.#fieldCharge = this.#field!.getCharge()
         this.#fieldEnergy = this.#field!.getEnergy()
+        this.isExistField = this.#fieldCharge !== 0
         return this
     }
 
     save(state: State) {
         if (
-            this.getSource().getCharge() !== 0 ||
-            this.getCorpuscle().getCharge() !== 0 ||
-            this.getFieldCharge() !== 0
+            this.isExistSource ||
+            this.isExistCorpuscle ||
+            this.isExistField
         ) {
             state.set(this.getX(), this.getY(), this)
         }
@@ -130,15 +140,15 @@ export class ChargeList extends AgentList{
     }
 
     getCountExistsAgent(): number {
-        return (this.getSource().getCharge() !== 0 ? 1 : 0) +
-            (this.getCorpuscle().getCharge() !== 0 ? 1 : 0) +
-            (this.getFieldCharge() !== 0 ? 1 : 0)
+        return <number><unknown>(this.isExistSource) +
+            <number><unknown>(this.isExistCorpuscle) +
+            <number><unknown>(this.isExistField)
     }
 
     getPixel(): Pixel {
         let pixel = new Pixel(255, 0, 0, 0)
-        const corpuscle = this.getCorpuscle() instanceof Corpuscle && this.getCorpuscle().getCharge() !== 0
-        const field = this.getField() instanceof Field && this.getField().getCharge() !== 0
+        const corpuscle = this.isExistCorpuscle
+        const field = this.isExistField
         if (corpuscle) {
             const charge = this.getCorpuscle().getCharge()
             pixel.setRed(255 * charge).setGreen(-255 * charge)
@@ -157,7 +167,7 @@ export class ChargeList extends AgentList{
                 }
             }
         }
-        if (this.getSource() instanceof Source && this.getSource().getCharge() !== 0) {
+        if (this.isExistSource) {
             pixel.setRed(155).setGreen(155).setBlue(155)
         }
         return pixel
