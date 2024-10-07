@@ -21,6 +21,8 @@ export class Render {
 
 	protected converter: {(agentList: AgentList): AgentList}
 	protected snapshotList: Array<ImagePixels> = []
+	protected currentSnapshot?: ImagePixels
+	protected nextSnapshot?: ImagePixels
 
 	protected isRun: boolean = false
 	protected renderId: number = 0
@@ -87,7 +89,8 @@ export class Render {
 	}
 
 	calculateSnapshotList() {
-		this.snapshotList.push(this.map.getSnapshot())
+		// this.snapshotList.push(this.map.getSnapshot())
+		this.currentSnapshot = this.map.getSnapshot()
 		this.currentCalculateCount += 1;
 		(this.htmlEditor)({
 			currentCalculateCount: this.currentCalculateCount,
@@ -100,8 +103,8 @@ export class Render {
 	}
 
 	drawSnapshotList() {
-		const currentSnapshot = this.snapshotList[this.currentDrawCount]
-		this.context.putImageData(currentSnapshot.increaseSize(this.timesCanvasToMap).imageData, 0, 0)
+		// const currentSnapshot = this.snapshotList[this.currentDrawCount]
+		this.context.putImageData(this.currentSnapshot!.increaseSize(this.timesCanvasToMap).imageData, 0, 0)
 		this.currentDrawCount += 1;
 		(this.htmlEditor)({
 			currentCalculateCount: this.currentCalculateCount,
