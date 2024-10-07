@@ -14,6 +14,8 @@ export class Map {
 
 	static instance: Map
 
+	protected currentSnapshot?: ImagePixels
+
 	constructor(
 		height: number,
 		width: number,
@@ -58,14 +60,14 @@ export class Map {
 	}
 
 	getSnapshot() {
-		let snapshot = ImagePixels.create(this.height, this.width)
+		this.currentSnapshot = ImagePixels.create(this.height, this.width)
 		for (let x = 0; x < this.width; x += 1) {
 			for (let y = 0; y < this.height; y +=1 ) {
-				snapshot.setPixelColor(x, y, this.loadAgentList(x, y).getPixel())
+				this.currentSnapshot.setPixelColor(x, y, this.loadAgentList(x, y).getPixel())
 			}
 		}
-		snapshot.fillImageData()
-		return snapshot
+		this.currentSnapshot.fillImageData()
+		return this.currentSnapshot
 	}
 
 	createStorage(height: number, width: number): State {
