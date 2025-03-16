@@ -3,18 +3,23 @@ import {Render, RenderConfig} from "./libs/ts/render/render";
 import {Seeder} from "./libs/ts/map/seeder";
 import {Charge} from "./simple_charge/charges/charge";
 import {Source} from "./simple_charge/charges/source";
+import {Index} from "./map";
 
 if (window.location.pathname === "/simple_charge/index.html") {
 	document.addEventListener('DOMContentLoaded', () => {
 		document.addEventListener('click', (event) => {
 			if (event.target.name === 'go') {
-				run()
+				runCharge()
 			}
 		})
 	})
 }
 
-function run() {
+if (window.location.pathname === "/map/index.html") {
+	(new Index()).start()
+}
+
+function runCharge() {
 	document.querySelector('#allCalculateCount').innerText = document.querySelector('[name=frames_count]').value
 	document.querySelector('#allDrawCount').innerText = document.querySelector('[name=frames_count]').value
 	let render = Render.create(
