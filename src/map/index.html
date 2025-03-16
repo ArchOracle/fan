@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Карта из графа</title>
+</head>
+<body>
+<label>
+	<span>Примерное количество точек интереса: </span>
+	<input type="number" id="point_count" value="15">
+</label>
+<br>
+<label>
+	<span>Примерное количество связей: </span>
+	<input type="number" id="link_count" value="17">
+</label>
+<br>
+<button id="generate">Генерация</button>
+<button id="evaluate">Эволюция</button>
+<br>
+<div id="completed" style="display: none">
+	Эволюция завершена!
+</div>
+<br>
+<canvas id="map" height="1000" width="1500"></canvas>
+</body>
+</html>

@@ -36,6 +36,10 @@ module.exports = {
 			template: './src/simple_charge/index.html',
 			filename: 'simple_charge/index.html',
 		}),
+		new HtmlWebpackPlugin({
+			template: './src/map/index.html',
+			filename: 'map/index.html',
+		}),
 	],
 
 	devServer: {
