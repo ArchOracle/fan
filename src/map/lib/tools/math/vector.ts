@@ -21,9 +21,12 @@ export class Vector {
     }
 
     getLength() {
-        return Math.sqrt(
-            (this.x)**2 +
-            (this.y)**2
+        return Math.sqrt((this.x) ** 2 + (this.y) ** 2 )
+    }
+
+    copy() {
+        return new Vector(
+            this.x, this.y
         )
     }
 }
