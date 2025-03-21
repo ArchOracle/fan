@@ -2,7 +2,7 @@ import {Location} from "./location";
 import {Point} from "./point";
 import {Vector} from "../tools/math/vector";
 
-export class Link extends Location{
+export class Link extends Location {
     constructor(protected pointStart: Point, protected pointEnd: Point) {
         super();
         pointStart.addLink(this)
@@ -26,10 +26,7 @@ export class Link extends Location{
     }
 
     getCurrentSize() {
-        return Math.sqrt(
-            (this.pointEnd.position.x - this.pointStart.position.x)**2 +
-            (this.pointEnd.position.y - this.pointStart.position.y)**2
-        )
+        return this.pointEnd.position.copy().sub(this.pointStart.position).getLength()
     }
 
     getPointStart() {
