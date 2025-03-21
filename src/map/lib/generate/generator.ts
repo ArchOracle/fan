@@ -27,6 +27,7 @@ export class Generator {
         (<HTMLElement>document.getElementById('completed')).style.display = 'none'
         this.pointList = []
         this.linkList = []
+        let linkList = []
         for (let i = 0; i < this.pointCount; i++) {
             this.pointList.push(
                 Point.create(
@@ -42,7 +43,7 @@ export class Generator {
             if (indexPointStart === indexPointEnd) {
                 indexPointEnd = (indexPointEnd + 1) % this.pointList.length
             }
-            this.linkList.push(
+            linkList.push(
                 (new Link(
                     this.pointList[indexPointStart],
                     this.pointList[indexPointEnd]
@@ -54,17 +55,38 @@ export class Generator {
             return point.getLinkList().length > 0
         })
 
-        for (let i = 0; i < this.linkCount; i++) {
-            if (!(this.linkList[i] instanceof Link)) {
+        for (let i = 0; i < linkList.length; i++) {
+            if (!(linkList[i] instanceof Link)) {
                 continue
             }
             if (
-                this.linkList[i].getPointEnd() === this.linkList[i].getPointStart() ||
-                !(this.linkList[i].getPointEnd() instanceof Point) ||
-                !(this.linkList[i].getPointStart() instanceof Point)
+                linkList[i].getPointEnd() === linkList[i].getPointStart() ||
+                !(linkList[i].getPointEnd() instanceof Point) ||
+                !(linkList[i].getPointStart() instanceof Point)
             ) {
                 // this.linkList.splice(i, 1)
-                delete this.linkList[i]
+                delete linkList[i]
+            }
+        }
+
+        let linkForDelete = [];
+        for (let i = 0; i < linkList.length; i += 1) {
+            for (let j = i + 1; j < linkList.length; j++) {
+                let from = linkList[i], to = linkList[j]
+                if (
+                    from.getPointStart() === to.getPointStart() &&
+                    from.getPointEnd() === to.getPointEnd()
+                ) {
+                    linkForDelete.push(j)
+                }
+            }
+        }
+        linkForDelete.forEach((index) => {
+            delete linkList[index]
+        })
+        for (let i = 0; i < linkList.length; i++) {
+            if (linkList[i] instanceof Link) {
+                this.linkList.push(linkList[i])
             }
         }
         this.linkCount = this.linkList.length
