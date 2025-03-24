@@ -1,12 +1,16 @@
 import {Point} from "../location/point";
 import {Link} from "../location/link";
 import {Vector} from "../tools/math/vector";
+import {Intersect} from "../tools/math/intersect";
+import {Line} from "../tools/math/primitive/line";
 
 export class Generator {
     private readonly context: CanvasRenderingContext2D;
     protected pointList: Array<Point> = []
     protected linkList: Array<Link> = []
     protected evaluateProcessed: boolean = false
+    protected fixGenerationCount = 0
+    protected fixGenerationMax = 2
 
     constructor(public pointCount: number = 10, public linkCount: number = 20, protected canvas: HTMLCanvasElement|null) {
         if (canvas === null) {
@@ -27,6 +31,7 @@ export class Generator {
         (<HTMLElement>document.getElementById('completed')).style.display = 'none'
         this.pointList = []
         this.linkList = []
+        this.fixGenerationCount = 0
         let linkList = []
         for (let i = 0; i < this.pointCount; i++) {
             this.pointList.push(
@@ -107,6 +112,10 @@ export class Generator {
                 this.evaluate()
             }, 10)
         } else {
+            setTimeout(() => {
+                this.fixGenerate()
+            }, 1000)
+            this.draw()
             this.evaluateProcessed = false;
             (<HTMLElement>document.getElementById('completed')).style.display = 'block'
         }
@@ -127,8 +136,100 @@ export class Generator {
         return movingPointCount !== 0
     }
 
-    checkNeedFixGeneration() {
+    fixGenerate() {
+        this.fixGenerationCount += 1
+        if (this.fixGenerationCount <= this.fixGenerationMax && this.fixIntersect()) {
+            this.evaluate()
+        }
+    }
 
+    fixIntersect() {
+        return this.fixIntersectLink()
+    }
+
+    fixIntersectLink() {
+        let intersectPairList: Array<IntersectLinePair> = []
+        for (let i = 0; i < this.linkList.length; i += 1) {
+            for (let j = i + 1; j < this.linkList.length; j++) {
+                let from = this.linkList[i], to = this.linkList[j]
+                let intersectPointList = (new Intersect()).checkIntersectLineWithLine(
+                    new Line(from.getPointStart().position, from.getPointEnd().position),
+                    new Line(to.getPointStart().position, to.getPointEnd().position),
+                ).intersectPointList
+                if (intersectPointList.length > 0) {
+                    intersectPairList.push({
+                        first: from,
+                        second: to,
+                        point: intersectPointList[0]
+                    })
+                }
+            }
+        }
+
+        intersectPairList.forEach((intersectPair) => {
+            this.splitIntersectLines(intersectPair)
+        })
+
+        this.clearEqualLink()
+
+        // alert(intersectPairList.length)
+        return intersectPairList.length > 0
+    }
+
+    splitIntersectLines(intersectPair: IntersectLinePair) {
+        let firstStart = intersectPair.first.getPointStart()
+        let firstEnd = intersectPair.first.getPointEnd()
+
+        let secondStart = intersectPair.second.getPointStart()
+        let secondEnd = intersectPair.second.getPointEnd()
+
+        let intersectPoint = Point
+            .create(intersectPair.point, new Vector(), new Vector())
+            .setSize(5 * Math.round(Math.random() * 3) + 5)
+
+        this.pointList.push(intersectPoint)
+
+        let sizeMultiplier = -0.5
+
+        this.linkList.push(
+            (new Link(firstStart, intersectPoint))
+                .setSize((intersectPoint.getSize() * 0 - intersectPair.first.getCurrentSize()) * sizeMultiplier)
+        )
+        this.linkList.push(
+            (new Link(firstEnd, intersectPoint))
+                .setSize((intersectPoint.getSize() * 0 - intersectPair.first.getCurrentSize()) * sizeMultiplier)
+        )
+        this.linkList.push(
+            (new Link(secondStart, intersectPoint))
+                .setSize((intersectPoint.getSize() * 0 - intersectPair.second.getCurrentSize()) * sizeMultiplier)
+        )
+        this.linkList.push(
+            (new Link(secondEnd, intersectPoint))
+                .setSize((intersectPoint.getSize() *0 - intersectPair.second.getCurrentSize()) * sizeMultiplier)
+        )
+
+        this.linkList = this.linkList.filter((link) => {
+            return link != intersectPair.first.remove() && link != intersectPair.second.remove()
+        })
+    }
+
+    clearEqualLink() {
+        let linkForDelete = []
+        for (let i = 0; i < this.linkList.length; i += 1) {
+            for (let j = i+1; j < this.linkList.length; j++) {
+                let from = this.linkList[i], to = this.linkList[j]
+                if (
+                    from instanceof Link && to instanceof Link &&
+                    from.getPointStart() === to.getPointStart() &&
+                    from.getPointEnd() === to.getPointEnd()
+                ) {
+                    delete this.linkList[j]
+                }
+            }
+        }
+        this.linkList = this.linkList.filter((link) => {
+            return link instanceof Link
+        })
     }
 
     draw() {
@@ -142,3 +243,5 @@ export class Generator {
         })
     }
 }
+
+export type IntersectLinePair = {first: Link, second: Link, point: Vector}
