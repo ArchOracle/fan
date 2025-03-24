@@ -43,4 +43,10 @@ export class Link extends Location {
         context.lineTo(this.pointEnd.position.x, this.pointEnd.position.y)
         context.stroke()
     }
+
+    remove() {
+        this.pointStart.removeLink(this)
+        this.pointEnd.removeLink(this)
+        return this
+    }
 }
