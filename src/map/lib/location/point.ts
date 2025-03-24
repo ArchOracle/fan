@@ -61,6 +61,13 @@ export class Point extends Location
         return this
     }
 
+    removeLink(removingLink: Link) {
+        this.linkList = this.linkList.filter((link) => {
+            return link != removingLink
+        })
+        return this
+    }
+
     getLinkList() {
         return this.linkList
     }
