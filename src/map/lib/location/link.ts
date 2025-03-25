@@ -37,6 +37,16 @@ export class Link extends Location {
         return this.pointEnd
     }
 
+    setPointStart(pointStart: Point) {
+        this.pointStart = pointStart
+        return this
+    }
+
+    setPointEnd(pointEnd: Point) {
+        this.pointEnd = pointEnd
+        return this
+    }
+
     draw(context: CanvasRenderingContext2D) {
         context.beginPath()
         context.moveTo(this.pointStart.position.x, this.pointStart.position.y)
@@ -48,5 +58,9 @@ export class Link extends Location {
         this.pointStart.removeLink(this)
         this.pointEnd.removeLink(this)
         return this
+    }
+
+    static getRandomSize() {
+        return Math.random() * 50 + 100 + Math.random() * 100
     }
 }
