@@ -1,8 +1,10 @@
 import {Vector} from "./vector";
 import {Line} from "./primitive/line";
+import {Circle} from "./primitive/circle";
 
 export class Intersect {
     public intersectPointList: Array<Vector> = []
+    public intersectCircleList: Array<Circle> = []
 
     checkIntersectLineWithLine(from: Line, to: Line) {
         let fromStartX: number = from.start.x
@@ -39,6 +41,14 @@ export class Intersect {
             )
         }
 
+        return this
+    }
+
+    checkIntersectCircleWithCircle(from: Circle, to: Circle) {
+        let distance = from.center.copy().sub(to.center.copy()).getLength()
+        if (distance < from.size + to.size) {
+            this.intersectCircleList.push(from, to)
+        }
         return this
     }
 }
