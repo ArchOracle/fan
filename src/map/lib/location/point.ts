@@ -47,7 +47,7 @@ export class Point extends Location
 
     evaluate() {
         this.position.add(this.speed)
-        this.speed.add(this.force.multipleOnScalar(1 / this.size)).multipleOnScalar(0.9)
+        this.speed.add(this.force.multipleOnScalar(1 / this.size)).multipleOnScalar(.97)
     }
 
     draw(context: CanvasRenderingContext2D) {
@@ -72,7 +72,7 @@ export class Point extends Location
         return this.linkList
     }
 
-    static checkIntersection(first: Point, second: Point) {
-
+    static getRandomSize() {
+        return Math.round(Math.random() * 10 + 15)
     }
 }
